@@ -4,7 +4,7 @@ Plugin Name: Post Type Archive Mapping
 Plugin URI: https://mediaron.com/portfolio/post-type-archive-mapping/
 Description: Map your post type archives to a page
 Author: Ronald Huereca
-Version: 1.0.0
+Version: 1.0.1
 Requires at least: 4.9
 Author URI: https://mediaron.com
 Contributors: ronalfy

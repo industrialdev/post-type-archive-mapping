@@ -2,8 +2,8 @@
 Contributors: ronalfy
 Tags: post types, archive, mapping, gutenberg
 Requires at least: 4.9
-Tested up to: 4.9
-Stable tag: 1.0.0
+Tested up to: 5.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -55,6 +55,10 @@ No, this plugin only works with pages.
 3. Settings->Reading option
 
 == Changelog ==
+
+= 1.0.1 =
+* Released 2018-11-07
+* WordPress 5.0 compatibility
 
 = 1.0.0 =
 * Released 2018-09-24

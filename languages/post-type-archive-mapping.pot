@@ -21,15 +21,15 @@ msgstr ""
 msgid "Older Items"
 msgstr ""
 
-#: post-type-archive-mapping.php:163
+#: post-type-archive-mapping.php:164
 msgctxt "plugin settings heading"
 msgid "Post Type Archive Mapping"
 msgstr ""
 
-#: post-type-archive-mapping.php:168
+#: post-type-archive-mapping.php:169
 msgid "Post Type Archive Mapping"
 msgstr ""
 
-#: post-type-archive-mapping.php:199
+#: post-type-archive-mapping.php:200
 msgid "Default"
 msgstr ""

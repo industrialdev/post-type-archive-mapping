@@ -51,7 +51,7 @@ registerBlockType( 'ptam/custom-posts', { // Block name. Block names must be str
 		}
 	},
 
-	edit,
+	edit: edit,
 
 	// Render via PHP
 	save() {
