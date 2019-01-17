@@ -1,10 +1,10 @@
 <?php
 /*
-Plugin Name: Archive Mapping and Show Posts Gutenberg Block
+Plugin Name: Archive Mapping and Post Selector Gutenberg Block
 Plugin URI: https://mediaron.com/portfolio/post-type-archive-mapping/
 Description: Map your post type archives to a page and use our Gutenberg block to show posts
 Author: Ronald Huereca
-Version: 2.0.0
+Version: 2.0.1
 Requires at least: 5.0
 Author URI: https://mediaron.com
 Contributors: ronalfy
@@ -106,7 +106,7 @@ class PostTypeArchiveMapping {
 				$post_id = absint( $post_id );
 				$query->set( 'post_type', 'page' );
 				$query->set( 'page_id', $post_id );
-				$query->set( 'paged', '0' );
+				$query->set( 'paged', $this->paged );
 				$query->is_archive = false;
 				$query->is_single = true;
 				$query->is_singular = true;
@@ -132,6 +132,7 @@ class PostTypeArchiveMapping {
 	}
 
 	public function post_type_save( $args ) {
+		if( ! is_array( $args ) ) return $args;
 		global $wpdb;
 		$query = "delete from {$wpdb->postmeta} where meta_key = '_post_type_mapped'";
 		$wpdb->query( $query );

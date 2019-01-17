@@ -1,14 +1,14 @@
-=== Post Type Archive Mapping ===
+=== Archive Mapping and Post Selector Gutenberg Block ===
 Contributors: ronalfy
 Tags: post types, archive, mapping, gutenberg, block
 Requires at least: 5.0
 Tested up to: 5.0
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
 
-A WordPress plugin for mapping post type archives to pages.
+A WordPress plugin for mapping post type archives to pages with a Gutenberb block for showing recent posts.
 
 == Description ==
 
@@ -28,6 +28,13 @@ https://www.youtube.com/watch?v=QT0QIdTBrdk?rel=0
 <li>Use page templates on your pages for flexibility.</li>
 <li>Custom Gutenberg block for showing your posts.</li>
 </ul>
+
+<h2>Gutenberg Block</h2>
+
+This 5-minute video covers how the Gutenberg block works.
+
+https://www.youtube.com/watch?v=Kozrc-1rSJY&rel=0
+
 
 == Installation ==
 
@@ -55,6 +62,10 @@ No, this plugin only works with pages.
 3. Settings->Reading option
 
 == Changelog ==
+
+= 2.0.1 =
+* Released 2019-01-17
+* Fixing bug where arguments weren't an array when switching reading types in Settings->Reading.
 
 = 2.0.0 =
 * Released 2019-01-06
