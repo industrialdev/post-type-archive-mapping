@@ -40,7 +40,7 @@ function ptam_blocks_editor_assets() {
 	wp_enqueue_script(
 		'ptam-custom-posts-gutenberg',
 		PostTypeArchiveMapping::get_plugin_url( 'assets/dist/js/gutenberg.js'),
-		array( 'wp-blocks', 'wp-element' ), '20190106', true
+		array( 'wp-blocks', 'wp-element' ), '20190329', true
 	);
 
 	// Pass in REST URL

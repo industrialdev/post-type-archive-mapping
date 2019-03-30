@@ -2,8 +2,8 @@
 Contributors: ronalfy
 Tags: post types, archive, mapping, gutenberg, block
 Requires at least: 5.0
-Tested up to: 5.0
-Stable tag: 2.0.1
+Tested up to: 5.1
+Stable tag: 2.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -62,6 +62,14 @@ No, this plugin only works with pages.
 3. Settings->Reading option
 
 == Changelog ==
+
+= 2.0.3 =
+* Released 2019-03-29
+* Fixed term not being saved when displaying posts
+
+= 2.0.1 =
+* Released 2019-01-17
+* Fixed pagination when using a page with just the block
 
 = 2.0.1 =
 * Released 2019-01-17

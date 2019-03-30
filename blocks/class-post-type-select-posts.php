@@ -306,7 +306,7 @@ function ptam_register_custom_posts_block() {
 				'default' => true,
 			),
 			'term' => array(
-				'type' => 'number',
+				'type' => 'int',
 				'default' => 0,
 			),
 			'terms' => array(
