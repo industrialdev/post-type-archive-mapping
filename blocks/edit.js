@@ -43,7 +43,7 @@ const {
 } = wp.editor;
 
 
-const MAX_POSTS_COLUMNS = 4;
+const MAX_POSTS_COLUMNS = 6;
 
 class PTAM_Custom_Posts extends Component {
 	constructor() {

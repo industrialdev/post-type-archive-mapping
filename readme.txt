@@ -3,7 +3,7 @@ Contributors: ronalfy
 Tags: post types, archive, mapping, gutenberg, block
 Requires at least: 5.0
 Tested up to: 5.1
-Stable tag: 2.0.3
+Stable tag: 2.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -63,6 +63,11 @@ No, this plugin only works with pages.
 
 == Changelog ==
 
+= 2.0.4 =
+* Released 2019-04-18
+* Adding support for six columns
+* Fixing undefined index error
+
 = 2.0.3 =
 * Released 2019-03-29
 * Fixed term not being saved when displaying posts
@@ -86,3 +91,8 @@ No, this plugin only works with pages.
 = 1.0.0 =
 * Released 2018-09-24
 * Initial release.
+
+== Upgrade Notice ==
+
+= 2.0.4 =
+Adding support for six columns. Fixing undefined index error.

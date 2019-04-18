@@ -4,7 +4,7 @@ Plugin Name: Archive Mapping and Post Selector Gutenberg Block
 Plugin URI: https://mediaron.com/portfolio/post-type-archive-mapping/
 Description: Map your post type archives to a page and use our Gutenberg block to show posts
 Author: Ronald Huereca
-Version: 2.0.3
+Version: 2.0.4
 Requires at least: 5.0
 Author URI: https://mediaron.com
 Contributors: ronalfy
@@ -13,6 +13,7 @@ Domain Path: /languages
 Credit: Forked from https://github.com/bigwing/post-type-archive-mapping
 Credit: Gutenberg block based on Atomic Blocks
 */
+define( 'PTAM_VERSION', '2.0.4' );
 
 class PostTypeArchiveMapping {
 	private static $instance = null;
@@ -206,7 +207,7 @@ class PostTypeArchiveMapping {
 				<option value="default"><?php esc_html_e( 'Default', 'post-type-archive-mapping' ); ?></option>
 				<?php
 				foreach( $posts as $post ) {
-					printf( '<option value="%d" %s>%s</option>', absint( $post->ID ), selected( $output[ $post_type ], $post->ID, false ), esc_html( $post->post_title ) );
+					printf( '<option value="%d" %s>%s</option>', absint( $post->ID ), selected( $selection, $post->ID, false ), esc_html( $post->post_title ) );
 				}
 				?>
 			</select>
