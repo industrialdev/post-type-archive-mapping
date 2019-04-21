@@ -3,7 +3,7 @@ Contributors: ronalfy
 Tags: post types, archive, mapping, gutenberg, block
 Requires at least: 5.0
 Tested up to: 5.1
-Stable tag: 2.0.4
+Stable tag: 2.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -63,6 +63,10 @@ No, this plugin only works with pages.
 
 == Changelog ==
 
+= 2.0.5 =
+* Released 2019-04-21
+* Conditional term filtering
+
 = 2.0.4 =
 * Released 2019-04-18
 * Adding support for six columns
@@ -93,6 +97,9 @@ No, this plugin only works with pages.
 * Initial release.
 
 == Upgrade Notice ==
+
+= 2.0.5 =
+Conditional term filtering
 
 = 2.0.4 =
 Adding support for six columns. Fixing undefined index error.

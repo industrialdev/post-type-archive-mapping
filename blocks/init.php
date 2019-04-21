@@ -63,11 +63,13 @@ add_action( 'enqueue_block_editor_assets', 'ptam_blocks_editor_assets' );
 function ptam_get_all_terms($tax_data) {
 	$taxonomy = $tax_data['taxonomy'];
 	$post_type = $tax_data['post_type'];
+	add_filter( 'terms_clauses', 'ptam_terms_clauses', 10, 3 );
 	$terms = get_terms( array(
 		'taxonomy' => $taxonomy,
 		'hide_empty' => true,
 		'post_type' => $post_type,
 	) );
+	remove_filter( 'terms_clauses', 'ptam_terms_clauses', 10, 3 );
 	if( is_wp_error( $terms ) ) {
 		die( json_encode( array() ) );
 	} else {
@@ -300,5 +302,3 @@ function ptam_terms_clauses( $clauses, $taxonomy, $args ) {
 	}
 	return $clauses;
 }
-// For Terms
-add_filter( 'terms_clauses', 'ptam_terms_clauses', 10, 3 );
