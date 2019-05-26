@@ -102,10 +102,10 @@ function ptam_get_posts($post_data) {
 	$term = $post_data['term'];
 	$post_type = $post_data['post_type'];
 	$posts_per_page = $post_data['posts_per_page'];
-	$image_crop = $post_data['image_crop'];
 	$image_type = $post_data['image_type'];
 	$image_size = $post_data['image_size'];
 	$avatar_size = $post_data['avatar_size'];
+	$link_color = $post_data['link_color'];
 
 	$post_args = array(
 		'post_type' => $post_type,
@@ -145,10 +145,29 @@ function ptam_get_posts($post_data) {
 		$taxonomies = get_object_taxonomies( $post->post_type, 'objects' );
 		$terms = array();
 		foreach( $taxonomies as $key => $taxonomy ) {
-			$terms[$key] = get_the_term_list( $post->ID, $key, '', ', ' );
+			$term_list = get_the_terms( $post->ID, $key );
+			$term_array = array();
+			if ( $term_list && ! empty( $term_list ) ) {
+				foreach ( $term_list as $term ) {
+					$term_permalink = get_term_link( $term, $key );
+					$term_array[] = sprintf( '<a href="%s" style="color: %s; text-decoration: none; box-shadow: unset;">%s</a>', esc_url( $term_permalink ), esc_attr( 6 === strlen( $link_color ) ? '#' . $link_color : $link_color ), esc_html( $term->name ) );
+				}
+				$terms[$key] = implode( ', ', $term_array );
+			} else {
+				$terms[$key] = false;
+			}
 		}
 		$post->terms = $terms;
 
+		if( empty( $post->post_excerpt ) ) {
+			$post->post_excerpt = apply_filters( 'the_excerpt', $post->post_content );
+		}
+
+		if ( ! $post->post_excerpt ) {
+			$post->post_excerpt = null;
+		}
+
+		$post->post_excerpt = wp_kses_post( $post->post_excerpt );
 	}
 	$return = array( 'posts' => $posts, 'image_sizes' => ptam_get_all_image_sizes(), 'taxonomies' => $taxonomies );
 	die( json_encode( $return ) );
@@ -166,10 +185,10 @@ function ptam_get_image( $post_data ) {
 	$term = $post_data['term'];
 	$post_type = $post_data['post_type'];
 	$posts_per_page = $post_data['posts_per_page'];
-	$image_crop = $post_data['image_crop'];
 	$avatar_size = $post_data['avatar_size'];
 	$image_type = $post_data['image_type'];
 	$image_size = $post_data['image_size'];
+	$link_color = $post_data['link_color'];
 
 	$post_args = array(
 		'post_type' => $post_type,
@@ -208,9 +227,30 @@ function ptam_get_image( $post_data ) {
 		$taxonomies = get_object_taxonomies( $post->post_type, 'objects' );
 		$terms = array();
 		foreach( $taxonomies as $key => $taxonomy ) {
-			$terms[$key] = get_the_term_list( $post->ID, $key, '', ', ' );
+			$term_list = get_the_terms( $post->ID, $key );
+			$term_array = array();
+			if ( $term_list && ! empty( $term_list ) ) {
+				foreach ( $term_list as $term ) {
+					$term_permalink = get_term_link( $term, $key );
+					$term_array[] = sprintf( '<a href="%s" style="color: %s; text-decoration: none; box-shadow: unset;">%s</a>', esc_url( $term_permalink ),  esc_attr( 6 === strlen( $link_color ) ? '#' . $link_color : $link_color ), esc_html( $term->name ) );
+				}
+				$terms[$key] = implode( ', ', $term_array );
+			} else {
+				$terms[$key] = false;
+			}
 		}
 		$post->terms = $terms;
+
+		// Get excerpt
+		if( empty( $post->post_excerpt ) ) {
+			$post->post_excerpt = apply_filters( 'the_excerpt', $post->post_content );
+		}
+
+		if ( ! $post->post_excerpt ) {
+			$post->post_excerpt = null;
+		}
+
+		$post->post_excerpt = wp_kses_post( $post->post_excerpt );
 
 	}
 	$return = array( 'posts' => $posts, 'image_sizes' => ptam_get_all_image_sizes(), 'taxonomies' => $taxonomies );
@@ -253,7 +293,7 @@ function ptam_register_route() {
 		'methods' => 'GET',
 		'callback' => 'ptam_get_all_terms',
 	));
-	register_rest_route('ptam/v1', '/get_posts/(?P<post_type>[-_a-zA-Z]+)/(?P<order>[a-zA-Z]+)/(?P<orderby>[a-zA-Z]+)/(?P<taxonomy>[-_a-zA-Z]+)/(?P<term>\d+)/(?P<posts_per_page>\d+)/(?P<image_crop>[-a-zA-Z]+)/(?P<avatar_size>\d+)/(?P<image_type>[-_A-Za-z]+)/(?P<image_size>[_-a-zA-Z0-9]+)', array(
+	register_rest_route('ptam/v1', '/get_posts/(?P<post_type>[-_a-zA-Z]+)/(?P<order>[a-zA-Z]+)/(?P<orderby>[a-zA-Z]+)/(?P<taxonomy>[-_a-zA-Z]+)/(?P<term>\d+)/(?P<posts_per_page>\d+)/(?P<image_crop>[-a-zA-Z]+)/(?P<avatar_size>\d+)/(?P<image_type>[-_A-Za-z]+)/(?P<image_size>[_-a-zA-Z0-9]+)/(?P<link_color>[a-zA-Z0-9]+)', array(
 		'methods' => 'GET',
 		'callback' => 'ptam_get_posts',
 	));
@@ -263,7 +303,7 @@ function ptam_register_route() {
 		'callback' => 'ptam_get_taxonomies',
 	));
 
-	register_rest_route('ptam/v1', '/get_images/(?P<post_type>[-_a-zA-Z]+)/(?P<order>[a-zA-Z]+)/(?P<orderby>[a-zA-Z]+)/(?P<taxonomy>[-_a-zA-Z]+)/(?P<term>\d+)/(?P<posts_per_page>\d+)/(?P<image_crop>[-a-zA-Z]+)/(?P<avatar_size>\d+)/(?P<image_type>[-_A-Za-z]+)/(?P<image_size>[_-a-zA-Z0-9]+)', array(
+	register_rest_route('ptam/v1', '/get_images/(?P<post_type>[-_a-zA-Z]+)/(?P<order>[a-zA-Z]+)/(?P<orderby>[a-zA-Z]+)/(?P<taxonomy>[-_a-zA-Z]+)/(?P<term>\d+)/(?P<posts_per_page>\d+)/(?P<image_crop>[-a-zA-Z]+)/(?P<avatar_size>\d+)/(?P<image_type>[-_A-Za-z]+)/(?P<image_size>[_-a-zA-Z0-9]+)/(?P<link_color>[a-zA-Z0-9]+)', array(
 		'methods' => 'GET',
 		'callback' => 'ptam_get_image'
 	));

@@ -8,17 +8,27 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
 
-A WordPress plugin for mapping post type archives to pages with a Gutenberb block for showing recent posts.
+A WordPress plugin for displaying posts using a Gutenberg block. Works well with posts, pages, custom post types, taxonomies, and terms.
 
 == Description ==
 
-A WordPress plugin for mapping post type archives to pages. Plays well with Gutenberg and Gutenberg is highly recommended for use with this plugin.
+A WordPress plugin for displaying posts using a Gutenberg block. Works well with posts, pages, custom post types, taxonomies, and terms.
+
+<h2>Gutenberg Block</h2>
+
+This 5-minute video covers how the Gutenberg block works.
+
+https://www.youtube.com/watch?v=Kozrc-1rSJY&rel=0
+
+<h2>Archive Mapping</h2>
+
+This plugin also allows you to map your custom post type archive pages. Just create a page and go to Settings->Reading to set the page for your archive.
 
 Ensure your post types have <code>has_archive</code> set to true.
 
 The plugin has a new Gutenberg block based on Atomic Blocks that will allow you to select which posts to display on your archive page. It even supports pagination.
 
-See below for an overview of how Post Type Archive Mapping works:
+See below for an overview of how Archive Mapping works:
 
 https://www.youtube.com/watch?v=QT0QIdTBrdk?rel=0
 
@@ -29,19 +39,12 @@ https://www.youtube.com/watch?v=QT0QIdTBrdk?rel=0
 <li>Custom Gutenberg block for showing your posts.</li>
 </ul>
 
-<h2>Gutenberg Block</h2>
-
-This 5-minute video covers how the Gutenberg block works.
-
-https://www.youtube.com/watch?v=Kozrc-1rSJY&rel=0
-
-
 == Installation ==
 
 1. Just unzip and upload the "post-type-archive-mapping" folder to your '/wp-content/plugins/' directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Create a custom post type that has an archive
-4. Create a page with a custom template
+4. Create a page with a custom template. Use the Gutenberg block to show off posts in that Custom Post Type.
 5. Go to Settings->Reading and assign the page to the custom post type archive
 6. Go to the post type archive and observe the page content is now the archive
 
@@ -62,6 +65,15 @@ No, this plugin only works with pages.
 3. Settings->Reading option
 
 == Changelog ==
+
+= 2.1.0 =
+* Released 2019-05-25
+* Fixed Gravatar sizing not saving.
+* Changing the way excerpts are shown in Gutenberg.
+* Added the ability to change taxonomy location.
+* Content can now be centered in the Grid view.
+* Added border, padding, and background style options in Gutenberg block.
+* Added color options for text in Gutenberg block.
 
 = 2.0.7 =
 * Released 2019-05-24
@@ -102,6 +114,9 @@ No, this plugin only works with pages.
 * Initial release.
 
 == Upgrade Notice ==
+
+= 2.1.0 =
+Fixed Gravatar sizing not saving. Changing the way excerpts are shown in Gutenberg. Added the ability to change taxonomy location. Content can now be centered in the Grid view. Added border, padding, and background style options in Gutenberg block. Added color options for text in Gutenberg block.
 
 = 2.0.7 =
 Added the ability to trim the excerpt length. Reduce the file size of the Gutenberg block script using a new build technique.
