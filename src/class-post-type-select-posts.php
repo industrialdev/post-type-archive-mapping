@@ -193,7 +193,7 @@ function ptam_custom_posts( $attributes ) {
 					$excerpt = $post->post_excerpt;
 
 					if( empty( $excerpt ) ) {
-						$excerpt = $post->post_content;
+						$excerpt = wp_strip_all_tags( strip_shortcodes( $post->post_content ) );
 					}
 
 					if ( ! $excerpt ) {

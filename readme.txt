@@ -3,7 +3,7 @@ Contributors: ronalfy, chrislogan
 Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
 Requires at least: 5.0
 Tested up to: 5.2
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -66,6 +66,10 @@ No, this plugin only works with pages.
 
 == Changelog ==
 
+= 2.1.1 =
+* Released 2019-05-26
+* Some users were seeing featured images twice in the back-end.
+
 = 2.1.0 =
 * Released 2019-05-25
 * Fixed Gravatar sizing not saving.
@@ -115,14 +119,5 @@ No, this plugin only works with pages.
 
 == Upgrade Notice ==
 
-= 2.1.0 =
-Fixed Gravatar sizing not saving. Changing the way excerpts are shown in Gutenberg. Added the ability to change taxonomy location. Content can now be centered in the Grid view. Added border, padding, and background style options in Gutenberg block. Added color options for text in Gutenberg block.
-
-= 2.0.7 =
-Added the ability to trim the excerpt length. Reduce the file size of the Gutenberg block script using a new build technique.
-
-= 2.0.5 =
-Conditional term filtering
-
-= 2.0.4 =
-Adding support for six columns. Fixing undefined index error.
+= 2.1.1 =
+Some users were seeing featured images twice in the back-end.
