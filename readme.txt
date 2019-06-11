@@ -3,7 +3,7 @@ Contributors: ronalfy, chrislogan
 Tags: custom post types, archive, mapping, gutenberg, block, taxonomy, terms
 Requires at least: 5.0
 Tested up to: 5.2
-Stable tag: 2.1.1
+Stable tag: 2.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://mediaron.com/give/
@@ -66,6 +66,10 @@ No, this plugin only works with pages.
 
 == Changelog ==
 
+= 2.1.2 =
+* Released 2019-06-11
+* Fixing pagination
+
 = 2.1.1 =
 * Released 2019-05-26
 * Some users were seeing featured images twice in the back-end.
@@ -118,6 +122,9 @@ No, this plugin only works with pages.
 * Initial release.
 
 == Upgrade Notice ==
+
+= 2.1.2 =
+Fixing pagination.
 
 = 2.1.1 =
 Some users were seeing featured images twice in the back-end.

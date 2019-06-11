@@ -160,7 +160,7 @@ function ptam_get_posts($post_data) {
 		$post->terms = $terms;
 
 		if( empty( $post->post_excerpt ) ) {
-			$post->post_excerpt = apply_filters( 'the_excerpt', $post->post_content );
+			$post->post_excerpt = apply_filters( 'the_excerpt', wp_strip_all_tags( strip_shortcodes( $post->post_content ) ) );
 		}
 
 		if ( ! $post->post_excerpt ) {

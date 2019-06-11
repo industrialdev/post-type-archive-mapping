@@ -60,6 +60,7 @@ function ptam_custom_posts( $attributes ) {
 		'post_status' => 'publish',
 		'order' => $attributes['order'],
 		'orderby' => $attributes['orderBy'],
+		'paged' => get_query_var( 'paged' ),
 	);
 	if ( isset( $attributes['taxonomy']) && isset( $attributes['term'] ) ) {
 		if( 'all' !== $attributes['term'] && 0 != $attributes['term'] && 'none' !== $attributes['taxonomy'] ) {
@@ -277,7 +278,7 @@ function ptam_custom_posts( $attributes ) {
 		$pagination = paginate_links( array(
 			'total'        => $recent_posts->max_num_pages,
 			'current'      => max( 1, get_query_var( 'paged' ) ),
-			'format'       => '/page/%#%',
+			'format'       => 'page/%#%',
 			'show_all'     => false,
 			'type'         => 'list',
 			'end_size'     => 1,
