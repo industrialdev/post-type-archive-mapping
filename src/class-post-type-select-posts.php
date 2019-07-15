@@ -132,7 +132,7 @@ function ptam_custom_posts( $attributes ) {
 
 				// Wrap the byline content
 				$list_items_markup .= sprintf(
-					'<div class="ptam-block-post-grid-byline %s" %s>', $attributes['changeCapitilization'] ? 'ptam-text-lower-case' : '',
+					'<div class="ptam-block-post-grid-byline %s" %s>', !empty($attributes['changeCapitilization']) ? 'ptam-text-lower-case' : '',
 					'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['metaAlignment']}; color: {$attributes['contentColor']}'" : "style='color: {$attributes['contentColor']};'"
 
 				);
