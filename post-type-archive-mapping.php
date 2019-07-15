@@ -1,15 +1,16 @@
 <?php
 /*
 Plugin Name: Custom Post Types Block
-Plugin URI: https://mediaron.com/portfolio/post-type-archive-mapping/
+Plugin URI: https://industrialagency.ca
 Description: Map your post type archives to a page and use our Gutenberg block to show posts
-Author: Ronald Huereca
+Author: Adam Bielinski
 Version: 2.1.2
 Requires at least: 5.0
-Author URI: https://mediaron.com
+Author URI: https://industrialagency.ca
 Contributors: ronalfy
-Text Domain: post-type-archive-mapping
+Text Domain: custom-post-type-filter-block
 Domain Path: /languages
+Credit: Forked from https://wordpress.org/plugins/post-type-archive-mapping/
 Credit: Forked from https://github.com/bigwing/post-type-archive-mapping
 Credit: Gutenberg block based on Atomic Blocks
 */
