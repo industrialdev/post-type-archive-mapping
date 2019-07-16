@@ -54,14 +54,23 @@ function ptam_get_taxonomy_terms( $post, $attributes = array() ) {
 	return $markup;
 }
 function ptam_custom_posts( $attributes ) {
+
+	$paged = 1;
+
+	// only paginate block if we have pagination enabled
+	if( !empty( $attributes['pagination'] ) && $attributes['pagination'] ) {
+		$paged = max(1, get_query_var( 'paged' ));
+	}
+
 	$post_args = array(
 		'post_type' => $attributes['postType'],
 		'posts_per_page' => $attributes['postsToShow'],
 		'post_status' => 'publish',
 		'order' => $attributes['order'],
 		'orderby' => $attributes['orderBy'],
-		'paged' => get_query_var( 'paged' ),
+		'paged' => $paged
 	);
+
 	if ( isset( $attributes['taxonomy']) && isset( $attributes['term'] ) ) {
 		if( 'all' !== $attributes['term'] && 0 != $attributes['term'] && 'none' !== $attributes['taxonomy'] ) {
 			$post_args[ 'tax_query' ] = array( array(

@@ -82,12 +82,8 @@ class PostTypeArchiveMapping {
 			if( $meta ) {
 				wp_redirect( get_post_type_archive_link( $meta ) );
 				exit();
-			} else {
-				if( get_query_var('paged' ) ) {
-					$query->set( 'paged', get_query_var('paged' ) );
-				}
-				return;
 			}
+            return;
 		}
 
 		// trigger this once after running the main query.
