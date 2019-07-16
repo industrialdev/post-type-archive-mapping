@@ -11,21 +11,18 @@ function ptam_get_profile_image( $attributes, $post_thumb_id = 0, $post_author =
 	if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] ) {
 		$post_thumb_size = $attributes['imageTypeSize'];
 		$image_type = $attributes['imageType'];
+
 		if( $image_type === 'gravatar' ) {
-			$list_item_markup .= sprintf(
-				'<div class="ptam-block-post-grid-image" %3$s><a href="%1$s" rel="bookmark">%2$s</a></div>',
-				esc_url( get_permalink( $post_id ) ),
-				get_avatar( $post_author, $attributes['avatarSize'] ),
-				'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['imageAlignment']}'" : ''
-			);
+			$image = get_avatar( $post_author, $attributes['avatarSize'] );
 		} else {
-			$list_item_markup .= sprintf(
-				'<div class="ptam-block-post-grid-image" %3$s><a href="%1$s" rel="bookmark">%2$s</a></div>',
-				esc_url( get_permalink( $post_id ) ),
-				wp_get_attachment_image( $post_thumb_id, $post_thumb_size ),
-				'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['imageAlignment']}'" : ''
-			);
+			$image = wp_get_attachment_image( $post_thumb_id, $post_thumb_size );
 		}
+		$list_item_markup .= sprintf(
+			'<div class="ptam-block-post-grid-image" %3$s><a href="%1$s" rel="bookmark">%2$s</a></div>',
+			esc_url( get_permalink( $post_id ) ),
+			$image,
+			'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['imageAlignment']}'" : ''
+		);
 		echo $list_item_markup;
 	}
 	return ob_get_clean();
@@ -147,14 +144,20 @@ function ptam_custom_posts( $attributes ) {
 				);
 
 					// Get the featured image
-					if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] && $post_thumb_id && 'below_title' === $attributes['imageLocation']) {
+					if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage']  && 'below_title' === $attributes['imageLocation']) {
+						if ($post_thumb_id){
+							$list_items_markup .= sprintf(
+								'<div class="ptam-block-post-grid-image" %3$s><a href="%1$s" rel="bookmark">%2$s</a></div>',
+								esc_url( get_permalink( $post_id ) ),
+								ptam_get_profile_image( $attributes, $post_thumb_id, $post->post_author, $post->ID ),
+								'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['imageAlignment']}" : ''
+							);
+						}else{
+							$list_items_markup .= sprintf(
+								'<div class="ptam-block-post-grid-image missing" %1$s></div>',
+								'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['imageAlignment']}" : '');
 
-						$list_items_markup .= sprintf(
-							'<div class="ptam-block-post-grid-image" %3$s><a href="%1$s" rel="bookmark">%2$s</a></div>',
-							esc_url( get_permalink( $post_id ) ),
-							ptam_get_profile_image( $attributes, $post_thumb_id, $post->post_author, $post->ID ),
-							'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['imageAlignment']}" : ''
-						);
+						}
 					}
 
 					// Get the post author
@@ -180,12 +183,20 @@ function ptam_custom_posts( $attributes ) {
 						$list_items_markup .= ptam_get_taxonomy_terms( $post, $attributes );
 					}
 					// Get the featured image
-					if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] && $post_thumb_id && 'below_title_and_meta' === $attributes['imageLocation']) {
-						$list_items_markup .= sprintf(
-							'<div class="ptam-block-post-grid-image"><a href="%1$s" rel="bookmark">%2$s</a></div>',
-							esc_url( get_permalink( $post_id ) ),
-							ptam_get_profile_image( $attributes, $post_thumb_id, $post->post_author, $post->ID )
-						);
+					if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] && 'below_title_and_meta' === $attributes['imageLocation']) {
+						if ($post_thumb_id){
+							$list_items_markup .= sprintf(
+								'<div class="ptam-block-post-grid-image" %3$s><a href="%1$s" rel="bookmark">%2$s</a></div>',
+								esc_url( get_permalink( $post_id ) ),
+								ptam_get_profile_image( $attributes, $post_thumb_id, $post->post_author, $post->ID ),
+								'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['imageAlignment']}" : ''
+							);
+						}else{
+							$list_items_markup .= sprintf(
+								'<div class="ptam-block-post-grid-image missing" %1$s></div>',
+								'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['imageAlignment']}" : '');
+
+						}
 					}
 
 				// Close the byline content
@@ -267,6 +278,10 @@ function ptam_custom_posts( $attributes ) {
 
 	if ( isset( $attributes['className'] ) ) {
 		$class .= ' ' . $attributes['className'];
+	}
+
+	if ( !empty(  $attributes['displayPostImage'])){
+		$class .= ' has-images';
 	}
 
 	$grid_class = 'ptam-post-grid-items';
