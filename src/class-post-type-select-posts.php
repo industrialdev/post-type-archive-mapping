@@ -121,12 +121,23 @@ function ptam_custom_posts( $attributes ) {
 				'<div class="ptam-block-post-grid-text">'
 			);
 
+			// Get the post date
+			if (!empty( $attributes['displayPostDateBefore'] )  &&
+			    isset( $attributes['displayPostDate'] ) && $attributes['displayPostDate'] ) {
+				$list_items_markup .= sprintf(
+					'<time datetime="%1$s" class="ptam-block-post-grid-date">%2$s</time>',
+					esc_attr( get_the_date( 'c', $post_id ) ),
+					esc_html( get_the_date( '', $post_id ) )
+				);
+			}
+
 				// Get the post title
 				$title = get_the_title( $post_id );
 
 				if ( ! $title ) {
 					$title = __( 'Untitled' );
 				}
+
 
 				$list_items_markup .= sprintf(
 					'<h2 class="ptam-block-post-grid-title" %3$s><a href="%1$s" rel="bookmark" style="color: %4$s; box-shadow: unset;">%2$s</a></h2>',
@@ -171,7 +182,8 @@ function ptam_custom_posts( $attributes ) {
 					}
 
 					// Get the post date
-					if ( isset( $attributes['displayPostDate'] ) && $attributes['displayPostDate'] ) {
+					if (empty( $attributes['displayPostDateBefore'] )  &&
+						isset( $attributes['displayPostDate'] ) && $attributes['displayPostDate'] ) {
 						$list_items_markup .= sprintf(
 							'<time datetime="%1$s" class="ptam-block-post-grid-date">%2$s</time>',
 							esc_attr( get_the_date( 'c', $post_id ) ),
@@ -405,6 +417,10 @@ function ptam_register_custom_posts_block() {
 			'displayPostDate' => array(
 				'type' => 'boolean',
 				'default' => true,
+			),
+			'displayPostDateBefore' => array(
+				'type' => 'boolean',
+				'default' => false,
 			),
 			'displayPostExcerpt' => array(
 				'type' => 'boolean',

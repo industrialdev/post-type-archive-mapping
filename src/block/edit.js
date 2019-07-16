@@ -39,6 +39,7 @@ class PTAM_Custom_Posts extends Component {
 		super( ...arguments );
 
 		this.toggleDisplayPostDate = this.toggleDisplayPostDate.bind( this );
+		this.toggleDisplayPostDateBefore = this.toggleDisplayPostDateBefore.bind( this );
 		this.toggleDisplayPostExcerpt = this.toggleDisplayPostExcerpt.bind( this );
 		this.toggleDisplayPostAuthor = this.toggleDisplayPostAuthor.bind( this );
 		this.toggleDisplayPostImage = this.toggleDisplayPostImage.bind( this );
@@ -174,6 +175,14 @@ class PTAM_Custom_Posts extends Component {
 
 		setAttributes( { displayPostDate: ! displayPostDate } );
 	}
+
+	toggleDisplayPostDateBefore() {
+		const { displayPostDateBefore } = this.props.attributes;
+		const { setAttributes } = this.props;
+
+		setAttributes( { displayPostDateBefore: ! displayPostDateBefore } );
+	}
+
 
 	toggleDisplayPostExcerpt() {
 		const { displayPostExcerpt } = this.props.attributes;
@@ -361,7 +370,7 @@ class PTAM_Custom_Posts extends Component {
 	render() {
 		let htmlToReactParser = new HtmlToReactParser();
 		const { attributes, setAttributes } = this.props;
-		const { postType, term, taxonomy, displayPostDate, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, linkColor, contentColor, continueReadingColor } = attributes;
+		const { postType, term, taxonomy, displayPostDate,displayPostDateBefore, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, linkColor, contentColor, continueReadingColor } = attributes;
 
 		let userTaxonomies = this.state.userTaxonomies;
 		let userTaxonomiesArray = [];
@@ -511,6 +520,11 @@ class PTAM_Custom_Posts extends Component {
 						label={ __( 'Display Post Date',  'post-type-archive-mapping' ) }
 						checked={ displayPostDate }
 						onChange={ this.toggleDisplayPostDate }
+					/>
+					<ToggleControl
+						label={ __( 'Display date before title',  'post-type-archive-mapping' ) }
+						checked={ displayPostDateBefore }
+						onChange={ this.toggleDisplayPostDateBefore }
 					/>
 					<ToggleControl
 						label={ __( 'Display Post Excerpt',  'post-type-archive-mapping' ) }
