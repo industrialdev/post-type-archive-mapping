@@ -1,7 +1,7 @@
 {
   "name": "industrialdev/post-type-archive-mapping",
   "description": "A Wordpress plugin for managing custom post types",
-  "type": "php",
+  "type": "wordpress-plugin",
   "license": "MIT",
   "authors": [
     {
@@ -9,13 +9,7 @@
       "email": "adam@industrialagency.ca"
     }
   ],
-  "minimum-stability": "dev",
   "require": {
-    "php": ">=7.1.0"
-  },
-  "autoload": {
-    "psr-0": {
-      "post-type-archive-mapping": "src/"
-    }
+    "composer/installers": "~1.0"
   }
 }
