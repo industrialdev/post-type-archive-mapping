@@ -1,0 +1,13 @@
+{
+  "name": "industrialdev/post-type-archive-mapping",
+  "description": "A Wordpress plugin for managing custom post types",
+  "type": "php",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Adam Bielinski",
+      "email": "adam@industrialagency.ca"
+    }
+  ],
+  "minimum-stability": "dev"
+}
