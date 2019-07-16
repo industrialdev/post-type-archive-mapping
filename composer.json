@@ -9,5 +9,13 @@
       "email": "adam@industrialagency.ca"
     }
   ],
-  "minimum-stability": "dev"
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=7.1.0"
+  },
+  "autoload": {
+    "psr-0": {
+      "post-type-archive-mapping": "src/"
+    }
+  }
 }
