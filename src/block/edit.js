@@ -730,6 +730,12 @@ class PTAM_Custom_Posts extends Component {
 				onClick: () => setAttributes( { postLayout: 'list' } ),
 				isActive: postLayout === 'list',
 			},
+			{
+				icon: 'excerpt-view',
+				title: __( 'Grid-List View',  'post-type-archive-mapping' ),
+				onClick: () => setAttributes( { postLayout: 'grid-list' } ),
+				isActive: postLayout === 'grid-list',
+			},
 		];
 
 		// Alignment Styles
@@ -771,6 +777,7 @@ class PTAM_Custom_Posts extends Component {
 							'is-custom' : imageLocation !== 'regular',
 							'is-grid': postLayout === 'grid',
 							'is-list': postLayout === 'list',
+							'is-grid-list': postLayout === 'grid-list',
 							[ `columns-${ columns }` ]: postLayout === 'grid',
 							'ptam-post-grid-items' : 'ptam-post-grid-items'
 						} ) }

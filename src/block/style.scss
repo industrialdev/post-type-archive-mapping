@@ -253,4 +253,24 @@
 			grid-column: span 1;
 		}
 	}
+
+    .is-grid-list{
+		article {
+
+			.ptam-block-post-grid-text {
+				display: grid;
+				grid-template-columns: 30% 1fr;
+				grid-template-rows: 1fr;
+				grid-gap: 0 2em;
+				*{
+					grid-column: 1;
+				}
+				.ptam-block-post-grid-excerpt{
+					grid-column: 2 / -1;
+					grid-row: 2 / span 1;
+				}
+			}
+		}
+
+	}
 }

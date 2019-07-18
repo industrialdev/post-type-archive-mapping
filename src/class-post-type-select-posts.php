@@ -239,15 +239,6 @@ function ptam_custom_posts( $attributes ) {
 						$list_items_markup .=  wp_kses_post( $excerpt );
 					}
 
-					if ( isset( $attributes['displayPostLink'] ) && $attributes['displayPostLink'] ) {
-						$list_items_markup .= sprintf(
-							'<p><a class="ptam-block-post-grid-link ptam-text-link" href="%1$s" rel="bookmark" style="color: %3$s">%2$s</a></p>',
-							esc_url( get_permalink( $post_id ) ),
-							esc_html( $attributes['readMoreText'] ),
-							esc_attr( $attributes['continueReadingColor'] )
-						);
-					}
-
 					// Get the featured image
 					if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] && $post_thumb_id && 'bottom' === $attributes['imageLocation']) {
 						if( $attributes['imageCrop'] === 'landscape' ) {
@@ -267,6 +258,16 @@ function ptam_custom_posts( $attributes ) {
 				$list_items_markup .= sprintf(
 					'</div>'
 				);
+
+
+                if ( isset( $attributes['displayPostLink'] ) && $attributes['displayPostLink'] ) {
+                    $list_items_markup .= sprintf(
+                        '<p><a class="ptam-block-post-grid-link ptam-text-link" href="%1$s" rel="bookmark" style="color: %3$s">%2$s</a></p>',
+                        esc_url( get_permalink( $post_id ) ),
+                        esc_html( $attributes['readMoreText'] ),
+                        esc_attr( $attributes['continueReadingColor'] )
+                    );
+                }
 
 				// Get the taxonomies
 				if ( isset( $attributes['displayTaxonomies'] ) && $attributes['displayTaxonomies'] && 'below_content' === $taxonomy_placement_options ) {
@@ -298,8 +299,14 @@ function ptam_custom_posts( $attributes ) {
 
 	$grid_class = 'ptam-post-grid-items';
 
-	if ( isset( $attributes['postLayout'] ) && 'list' === $attributes['postLayout'] ) {
-		$grid_class .= ' is-list';
+	if ( isset( $attributes['postLayout'] ) ){
+		if ('list' === $attributes['postLayout'] ) {
+			$grid_class .= ' is-list';
+		}elseif ('grid-list' === $attributes['postLayout'] ) {
+			$grid_class .= ' is-grid-list';
+		} else {
+			$grid_class .= ' is-grid';
+		}
 	} else {
 		$grid_class .= ' is-grid';
 	}

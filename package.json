@@ -84,7 +84,7 @@
     "start": "node scripts/start.js",
     "build": "npm-run-all makepot build-assets",
     "build-assets": "node scripts/build.js",
-    "makepot": "wp i18n make-pot . languages/atomic-blocks.pot --exclude=config,node_modules,scripts,vendor,dist/blocks.build.js",
+    "makepot": "wp i18n make-pot . languages/post-type-archive-mapping.pot --exclude=config,node_modules,scripts,vendor,dist/blocks.build.js",
     "lint:css": "wp-scripts lint-style",
     "lint:css:src": "wp-scripts lint-style 'src/**/*.css'",
     "lint:js": "wp-scripts lint-js",
