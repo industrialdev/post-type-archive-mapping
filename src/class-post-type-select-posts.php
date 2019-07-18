@@ -125,9 +125,10 @@ function ptam_custom_posts( $attributes ) {
 			if (!empty( $attributes['displayPostDateBefore'] )  &&
 			    isset( $attributes['displayPostDate'] ) && $attributes['displayPostDate'] ) {
 				$list_items_markup .= sprintf(
-					'<time datetime="%1$s" class="ptam-block-post-grid-date">%2$s</time>',
+					'<time datetime="%1$s" class="ptam-block-post-grid-date" style="color: %3$s;">%2$s</time>',
 					esc_attr( get_the_date( 'c', $post_id ) ),
-					esc_html( get_the_date( '', $post_id ) )
+					esc_html( get_the_date( '', $post_id ) ),
+                    esc_html($attributes['dateColor'])
 				);
 			}
 
@@ -181,15 +182,17 @@ function ptam_custom_posts( $attributes ) {
 						);
 					}
 
-					// Get the post date
-					if (empty( $attributes['displayPostDateBefore'] )  &&
-						isset( $attributes['displayPostDate'] ) && $attributes['displayPostDate'] ) {
-						$list_items_markup .= sprintf(
-							'<time datetime="%1$s" class="ptam-block-post-grid-date">%2$s</time>',
-							esc_attr( get_the_date( 'c', $post_id ) ),
-							esc_html( get_the_date( '', $post_id ) )
-						);
-					}
+                    // Get the post date
+                    if (empty( $attributes['displayPostDateBefore'] )  &&
+                        isset( $attributes['displayPostDate'] ) && $attributes['displayPostDate'] ) {
+                        $list_items_markup .= sprintf(
+                            '<time datetime="%1$s" class="ptam-block-post-grid-date" style="color: %3$s;">%2$s</time>',
+                            esc_attr( get_the_date( 'c', $post_id ) ),
+                            esc_html( get_the_date( '', $post_id ) ),
+                            esc_html($attributes['dateColor'])
+                        );
+                    }
+
 					// Get the taxonomies
 					if ( isset( $attributes['displayTaxonomies'] ) && $attributes['displayTaxonomies'] && 'regular' === $taxonomy_placement_options ) {
 						$list_items_markup .= ptam_get_taxonomy_terms( $post, $attributes );
@@ -529,6 +532,10 @@ function ptam_register_custom_posts_block() {
 				'type' => 'string',
 				'default' => 'inherit',
 			),
+            'dateColor' => array(
+                'type' => 'string',
+                'default' => 'inherit',
+            ),
 			'continueReadingColor' => array(
 				'type' => 'string',
 				'default' => 'inherit',

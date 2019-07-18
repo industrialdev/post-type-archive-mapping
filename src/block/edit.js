@@ -358,6 +358,9 @@ class PTAM_Custom_Posts extends Component {
 	onChangeContentColor = ( value ) => {
 		this.props.setAttributes( { contentColor: value } );
 	}
+	onChangeDateColor = ( value ) => {
+		this.props.setAttributes( { dateColor: value } );
+	}
 	onChangeLinkColor = ( value ) => {
 		this.props.setAttributes( { linkColor: value } );
 		this.props.attributes.linkColor = value;
@@ -370,7 +373,7 @@ class PTAM_Custom_Posts extends Component {
 	render() {
 		let htmlToReactParser = new HtmlToReactParser();
 		const { attributes, setAttributes } = this.props;
-		const { postType, term, taxonomy, displayPostDate,displayPostDateBefore, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, linkColor, contentColor, continueReadingColor } = attributes;
+		const { postType, term, taxonomy, displayPostDate,displayPostDateBefore, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, linkColor, contentColor, dateColor, continueReadingColor } = attributes;
 
 		let userTaxonomies = this.state.userTaxonomies;
 		let userTaxonomiesArray = [];
@@ -659,6 +662,16 @@ class PTAM_Custom_Posts extends Component {
 						>
 					</PanelColorSettings>
 					<PanelColorSettings
+						title={ __( 'Date Color', 'post-type-archive-mapping' ) }
+						initialOpen={ true }
+						colorSettings={ [ {
+							value: dateColor,
+							onChange: this.onChangeDateColor,
+							label: __( 'Date Color', 'post-type-archive-mapping' ),
+						} ] }
+					>
+					</PanelColorSettings>
+					<PanelColorSettings
 						title={ __( 'Link Color', 'post-type-archive-mapping' ) }
 						initialOpen={ true }
 						colorSettings={ [ {
@@ -746,6 +759,7 @@ class PTAM_Custom_Posts extends Component {
 
 		// Color Styles
 		const titleColorStyles = { color: titleColor };
+		const dateColorStyles = { color: dateColor };
 		const linkColorStyles = { color: linkColor };
 		const continueReadingColorStyles = { color: continueReadingColor };
 
@@ -821,7 +835,7 @@ class PTAM_Custom_Posts extends Component {
 										}
 
 										{ displayPostDate && post.post_date_gmt &&
-											<time dateTime={ moment( post.post_date_gmt ).utc().format() } className={ 'ptam-block-post-grid-date' }>
+											<time dateTime={ moment( post.post_date_gmt ).utc().format() } className={ 'ptam-block-post-grid-date' } style={dateColorStyles}>
 												{ moment( post.post_date_gmt ).local().format( 'MMMM DD, Y' ) }
 											</time>
 										}
