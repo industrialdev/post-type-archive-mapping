@@ -1,5 +1,5 @@
 <?php
-require 'init.php';
+require_once 'init.php';
 /**
  * Renders the post grid block on server.
  */
@@ -321,7 +321,7 @@ function ptam_custom_posts( $attributes ) {
 	// Pagination
 	$pagination = '';
 	if( isset( $attributes['pagination'] ) && $attributes['pagination'] ) {
-		$pagination = paginate_links( array(
+		 $args = array(
 			'total'        => $recent_posts->max_num_pages,
 			'current'      => max( 1, get_query_var( 'paged' ) ),
 			'format'       => 'page/%#%',
@@ -332,9 +332,16 @@ function ptam_custom_posts( $attributes ) {
 			'prev_next'    => false,
 			'prev_text'    => sprintf( '<i></i> %1$s', __( 'Newer Items', 'post-type-archive-mapping' ) ),
 			'next_text'    => sprintf( '%1$s <i></i>', __( 'Older Items', 'post-type-archive-mapping' ) ),
-			'add_args'     => false,
 			'add_fragment' => '',
-		) );
+		 );
+
+		 // TODO: Remove this specific override for sassquatch and allow for filters or something
+		 if (function_exists('sassquatch_pagination')){
+             $pagination = sassquatch_pagination($args);
+         }else{
+             $pagination = paginate_links($args);
+         }
+
 	}
 
 	// Output the post markup
@@ -352,198 +359,199 @@ function ptam_custom_posts( $attributes ) {
 /**
  * Registers the `core/latest-posts` block on server.
  */
-function ptam_register_custom_posts_block() {
+function ptam_register_custom_posts_block()
+{
 
-	// Check if the register function exists
-	if ( ! function_exists( 'register_block_type' ) ) {
-		return;
-	}
+    // Check if the register function exists
+    if (!function_exists('register_block_type')) {
+        return;
+    }
 
-	register_block_type( 'ptam/custom-posts', array(
-		'attributes' => array(
-			'postType' => array(
-				'type' => 'string',
-				'default' => 'post',
-			),
-			'imageLocation' => array(
-				'type' => 'string',
-				'default' => 'regular'
-			),
-			'changeCapitilization' => array(
-				'type' => 'bool',
-				'value' => false
-			),
-			'imageSize' => array(
-				'type' => 'string',
-				'default' => 'ptam-block-post-grid-landscape'
-			),
-			'imageTypeSize' => array(
-				'type' => 'string',
-				'default' => 'thumbnail',
-			),
-			'imageType' => array(
-				'type' => 'string',
-				'default' => 'regular'
-			),
-			'avatarSize' => array(
-				'type' => 'int',
-				'default' => 500
-			),
-			'taxonomy' => array(
-				'type' => 'string',
-				'default' => 'category',
-			),
-			'displayTaxonomies' => array(
-				'type' => 'bool',
-				'default' => true,
-			),
-			'taxonomyLocation' => array(
-				'type' => 'string',
-				'default' => 'regular',
-			),
-			'term' => array(
-				'type' => 'int',
-				'default' => 0,
-			),
-			'terms' => array(
-				'type' => 'string',
-				'default' => 'all',
-			),
-			'context' => array(
-				'type' => 'string',
-				'default' => 'view',
-			),
-			'className' => array(
-				'type' => 'string',
-			),
-			'postsToShow' => array(
-				'type' => 'number',
-				'default' => 6,
-			),
-			'pagination' => array(
-				'type' => 'boolean',
-				'default' => false,
-			),
-			'displayPostDate' => array(
-				'type' => 'boolean',
-				'default' => true,
-			),
-			'displayPostDateBefore' => array(
-				'type' => 'boolean',
-				'default' => false,
-			),
-			'displayPostExcerpt' => array(
-				'type' => 'boolean',
-				'default' => true,
-			),
-			'displayPostAuthor' => array(
-				'type' => 'boolean',
-				'default' => true,
-			),
-			'displayPostImage' => array(
-				'type' => 'boolean',
-				'default' => true,
-			),
-			'displayPostLink' => array(
-				'type' => 'boolean',
-				'default' => true,
-			),
-			'postLayout' => array(
-				'type' => 'string',
-				'default' => 'grid',
-			),
-			'columns' => array(
-				'type' => 'number',
-				'default' => 2,
-			),
-			'align' => array(
-				'type' => 'string',
-				'default' => 'center',
-			),
-			'width' => array(
-				'type' => 'string',
-				'default' => 'wide',
-			),
-			'order' => array(
-				'type' => 'string',
-				'default' => 'desc',
-			),
-			'orderBy'  => array(
-				'type' => 'string',
-				'default' => 'date',
-			),
-			'imageCrop'  => array(
-				'type' => 'string',
-				'default' => 'landscape',
-			),
-			'readMoreText'  => array(
-				'type' => 'string',
-				'default' => 'Continue Reading',
-			),
-			'trimWords'  => array(
-				'type' => 'int',
-				'default' => 55,
-			),
-			'titleAlignment'  => array(
-				'type' => 'string',
-				'default' => 'left',
-			),
-			'imageAlignment'  => array(
-				'type' => 'string',
-				'default' => 'left',
-			),
-			'metaAlignment'  => array(
-				'type' => 'string',
-				'default' => 'left',
-			),
-			'contentAlignment'  => array(
-				'type' => 'string',
-				'default' => 'left',
-			),
-			'padding' => array(
-				'type' => 'number',
-				'default' => 0,
-			),
-			'border' => array(
-				'type' => 'number',
-				'default' => 0,
-			),
-			'borderRounded' => array(
-				'type' => 'number',
-				'default' => 0
-			),
-			'borderColor' => array(
-				'type' => 'string',
-				'default' => '#000000',
-			),
-			'backgroundColor' => array(
-				'type' => 'string',
-				'default' => 'inherit',
-			),
-			'titleColor' => array(
-				'type' => 'string',
-				'default' => 'inherit',
-			),
-			'linkColor' => array(
-				'type' => 'string',
-				'default' => 'inherit',
-			),
-			'contentColor' => array(
-				'type' => 'string',
-				'default' => 'inherit',
-			),
+    register_block_type('ptam/custom-posts', array(
+        'attributes' => array(
+            'postType' => array(
+                'type' => 'string',
+                'default' => 'post',
+            ),
+            'imageLocation' => array(
+                'type' => 'string',
+                'default' => 'regular'
+            ),
+            'changeCapitilization' => array(
+                'type' => 'bool',
+                'value' => false
+            ),
+            'imageSize' => array(
+                'type' => 'string',
+                'default' => 'ptam-block-post-grid-landscape'
+            ),
+            'imageTypeSize' => array(
+                'type' => 'string',
+                'default' => 'thumbnail',
+            ),
+            'imageType' => array(
+                'type' => 'string',
+                'default' => 'regular'
+            ),
+            'avatarSize' => array(
+                'type' => 'int',
+                'default' => 500
+            ),
+            'taxonomy' => array(
+                'type' => 'string',
+                'default' => 'category',
+            ),
+            'displayTaxonomies' => array(
+                'type' => 'bool',
+                'default' => true,
+            ),
+            'taxonomyLocation' => array(
+                'type' => 'string',
+                'default' => 'regular',
+            ),
+            'term' => array(
+                'type' => 'int',
+                'default' => 0,
+            ),
+            'terms' => array(
+                'type' => 'string',
+                'default' => 'all',
+            ),
+            'context' => array(
+                'type' => 'string',
+                'default' => 'view',
+            ),
+            'className' => array(
+                'type' => 'string',
+            ),
+            'postsToShow' => array(
+                'type' => 'number',
+                'default' => 6,
+            ),
+            'pagination' => array(
+                'type' => 'boolean',
+                'default' => false,
+            ),
+            'displayPostDate' => array(
+                'type' => 'boolean',
+                'default' => true,
+            ),
+            'displayPostDateBefore' => array(
+                'type' => 'boolean',
+                'default' => false,
+            ),
+            'displayPostExcerpt' => array(
+                'type' => 'boolean',
+                'default' => true,
+            ),
+            'displayPostAuthor' => array(
+                'type' => 'boolean',
+                'default' => true,
+            ),
+            'displayPostImage' => array(
+                'type' => 'boolean',
+                'default' => true,
+            ),
+            'displayPostLink' => array(
+                'type' => 'boolean',
+                'default' => true,
+            ),
+            'postLayout' => array(
+                'type' => 'string',
+                'default' => 'grid',
+            ),
+            'columns' => array(
+                'type' => 'number',
+                'default' => 2,
+            ),
+            'align' => array(
+                'type' => 'string',
+                'default' => 'center',
+            ),
+            'width' => array(
+                'type' => 'string',
+                'default' => 'wide',
+            ),
+            'order' => array(
+                'type' => 'string',
+                'default' => 'desc',
+            ),
+            'orderBy' => array(
+                'type' => 'string',
+                'default' => 'date',
+            ),
+            'imageCrop' => array(
+                'type' => 'string',
+                'default' => 'landscape',
+            ),
+            'readMoreText' => array(
+                'type' => 'string',
+                'default' => 'Continue Reading',
+            ),
+            'trimWords' => array(
+                'type' => 'int',
+                'default' => 55,
+            ),
+            'titleAlignment' => array(
+                'type' => 'string',
+                'default' => 'left',
+            ),
+            'imageAlignment' => array(
+                'type' => 'string',
+                'default' => 'left',
+            ),
+            'metaAlignment' => array(
+                'type' => 'string',
+                'default' => 'left',
+            ),
+            'contentAlignment' => array(
+                'type' => 'string',
+                'default' => 'left',
+            ),
+            'padding' => array(
+                'type' => 'number',
+                'default' => 0,
+            ),
+            'border' => array(
+                'type' => 'number',
+                'default' => 0,
+            ),
+            'borderRounded' => array(
+                'type' => 'number',
+                'default' => 0
+            ),
+            'borderColor' => array(
+                'type' => 'string',
+                'default' => '#000000',
+            ),
+            'backgroundColor' => array(
+                'type' => 'string',
+                'default' => 'inherit',
+            ),
+            'titleColor' => array(
+                'type' => 'string',
+                'default' => 'inherit',
+            ),
+            'linkColor' => array(
+                'type' => 'string',
+                'default' => 'inherit',
+            ),
+            'contentColor' => array(
+                'type' => 'string',
+                'default' => 'inherit',
+            ),
             'dateColor' => array(
                 'type' => 'string',
                 'default' => 'inherit',
             ),
-			'continueReadingColor' => array(
-				'type' => 'string',
-				'default' => 'inherit',
-			),
-		),
-		'render_callback' => 'ptam_custom_posts',
-		'editor_script'   => 'ptam-custom-posts-gutenberg'
-	) );
+            'continueReadingColor' => array(
+                'type' => 'string',
+                'default' => 'inherit',
+            ),
+        ),
+        'render_callback' => 'ptam_custom_posts',
+        'editor_script' => 'ptam-custom-posts-gutenberg'
+    ));
 }
 
 add_action( 'init', 'ptam_register_custom_posts_block' );

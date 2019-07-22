@@ -51,6 +51,7 @@ class PostTypeArchiveMapping {
 		add_action( 'init', array( $this, 'init' ), 9 );
 		load_plugin_textdomain( 'post-type-archive-mapping', false, basename( dirname( __FILE__ ) ) . '/languages' );
 		include 'src/class-post-type-select-posts.php';
+		include 'src/class-filter-posts.php';
 	} //end constructor
 
 	/**
