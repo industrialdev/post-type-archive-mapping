@@ -244,13 +244,6 @@ class PTAM_Custom_Posts extends Component {
 		setAttributes( { trimWords: value } );
 	};
 
-	customizeReadMoreText() {
-		const { readMoreText } = this.props.attributes;
-		const { setAttributes } = this.props;
-
-		setAttributes( { readMoreText: ! readMoreText } );
-	}
-
 	onChangeLocation = (value) => {
 		this.setState( {
 			imageLocation: value
@@ -381,7 +374,7 @@ class PTAM_Custom_Posts extends Component {
 	render() {
 		let htmlToReactParser = new HtmlToReactParser();
 		const { attributes, setAttributes } = this.props;
-		const { postType, term, taxonomy, displayPostDate,displayPostDateBefore, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, displayFiltering,filterableTaxonomies, orderBy, postsToShow, readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, linkColor, contentColor, dateColor, continueReadingColor } = attributes;
+		const { postType, term, taxonomy, displayPostDate,displayPostDateBefore, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, displayFiltering,filterableTaxonomies, orderBy, postsToShow, readMoreText,readMoreClassName, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, linkColor, contentColor, dateColor, continueReadingColor } = attributes;
 
 		let userTaxonomies = this.state.userTaxonomies;
 		let userTaxonomiesArray = [];
@@ -581,6 +574,14 @@ class PTAM_Custom_Posts extends Component {
 						type="text"
 						value={ readMoreText }
 						onChange={ ( value ) => this.props.setAttributes( { readMoreText: value } ) }
+					/>
+					}
+					{displayPostLink &&
+					<TextControl
+						label={__('Customize Read Class Name', 'post-type-archive-mapping')}
+						type="text"
+						value={readMoreClassName}
+						onChange={(value) => this.props.setAttributes({readMoreClassName: value})}
 					/>
 					}
 				</PanelBody>
@@ -930,7 +931,7 @@ class PTAM_Custom_Posts extends Component {
 										}
 
 										{ displayPostLink &&
-											<p><a className="ptam-block-post-grid-link ptam-text-link" href={ post.link } target="_blank" rel="bookmark" style={continueReadingColorStyles}>{ readMoreText }</a></p>
+											<p><a className="ptam-block-post-grid-link ptam-text-link { readMoreClassName }" href={ post.link } target="_blank" rel="bookmark" style={continueReadingColorStyles}>{ readMoreText }</a></p>
 										}
 										{
 										displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'bottom' === this.state.imageLocation ? (

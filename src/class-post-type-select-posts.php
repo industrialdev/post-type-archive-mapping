@@ -352,10 +352,11 @@ function ptam_custom_posts( $attributes ) {
 
                 if ( isset( $attributes['displayPostLink'] ) && $attributes['displayPostLink'] ) {
                     $list_items_markup .= sprintf(
-                        '<p><a class="ptam-block-post-grid-link ptam-text-link" href="%1$s" rel="bookmark" style="color: %3$s">%2$s</a></p>',
+                        '<p><a class="ptam-block-post-grid-link ptam-text-link %4$s" href="%1$s" rel="bookmark" style="color: %3$s">%2$s</a></p>',
                         esc_url( get_permalink( $post_id ) ),
                         esc_html( $attributes['readMoreText'] ),
-                        esc_attr( $attributes['continueReadingColor'] )
+                        esc_attr( $attributes['continueReadingColor'] ),
+                        esc_attr( $attributes['readMoreClassName'])
                     );
                 }
 
@@ -583,6 +584,10 @@ function ptam_register_custom_posts_block()
             'readMoreText' => array(
                 'type' => 'string',
                 'default' => 'Continue Reading',
+            ),
+            'readMoreClassName' => array(
+                'type' => 'string',
+                'default' => ''
             ),
             'trimWords' => array(
                 'type' => 'int',
