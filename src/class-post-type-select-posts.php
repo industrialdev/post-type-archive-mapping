@@ -368,7 +368,16 @@ function ptam_custom_posts( $attributes ) {
 			// Close the markup for the post
 			$list_items_markup .= "</article>\n";
 		}
-	endif;
+	else :
+
+        if( !empty( $attributes['displayFiltering'] ) && $attributes['displayFiltering'] ) {
+            $label = get_post_type_object($attributes['postType'])->labels->name;
+            $list_items_markup .= "<p>";
+            $list_items_markup .= sprintf(__("No %s found"), $label);
+            $list_items_markup .= "</p>";
+        }
+
+    endif;
 
 	// Build the classes
 	$class = "ptam-block-post-grid align{$attributes['align']}";
