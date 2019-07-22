@@ -50,8 +50,74 @@ function ptam_get_taxonomy_terms( $post, $attributes = array() ) {
 	}
 	return $markup;
 }
+
+$id_counter = 0;
+function ptam_filtering ( $attributes, &$post_args, $post_type) {
+    if( empty( $attributes['displayFiltering'] ) || !$attributes['displayFiltering'] ) {
+        return "";
+    }
+
+    global $id_counter;
+
+    $taxonomies = get_object_taxonomies( $post_type, 'objects' );
+    $showReset = false;
+
+    $filter_block = "";
+    $filter_block .= '<form method="get" class="grid grid--flex-md ptam-filter-form">';
+
+    foreach( $attributes['filterableTaxonomies'] as $tax_name ) {
+        $tax_formname = "ptam_" . $tax_name;
+        $taxonomy = $taxonomies[$tax_name];
+        $terms = get_terms(array(
+            'taxonomy'=>$tax_name
+        ));
+
+        if(!empty(get_query_var($tax_formname))){
+            $showReset = true;
+            array_push($post_args['tax_query'],
+                array('taxonomy' => $tax_name, 'terms' => (int)get_query_var($tax_formname), 'operator' => 'AND' ));
+        }
+
+        $filter_block .= '<div class="form__group grid__col">';
+            $filter_block .= '<label for="select-3" class="form__label">';
+
+            $filter_block .= __('Filter by') . " " . $taxonomy->labels->singular_name;
+            $args = array(
+                'taxonomy'  => $tax_name,
+                'class'     => 'form__input',
+                //'id'        => 'select-ptam-'.$id_counter++,
+                'name'      => $tax_formname,
+                'show_option_all' => "&nbsp;",
+                'selected'  => get_query_var($tax_formname),
+                'echo'      => false
+            );
+            $filter_block .= wp_dropdown_categories( $args );
+
+            $filter_block .= '</label>';
+        $filter_block .= '</div>';
+    }
+
+    $filter_block .= '<div class="form__group grid__col">';
+
+        $filter_block .= '<label>&nbsp;';
+        $filter_block .= '<input type="submit" value="Filter" class="button button--primary button--full-width"></label>';
+
+        if ($showReset){
+
+            $filter_block .= '
+            <div style="text-align: center;">
+                <a class="button button--small button--secondary button--full-width reset-form" href="'.get_the_permalink().'">Reset filters</a>
+            </div>';
+
+        }
+    $filter_block .= '</div>';
+    $filter_block .= '</form><br/>';
+    return $filter_block;
+}
+
 function ptam_custom_posts( $attributes ) {
 
+    global $post;
 	$paged = 1;
 
 	// only paginate block if we have pagination enabled
@@ -63,9 +129,20 @@ function ptam_custom_posts( $attributes ) {
 		'post_type' => $attributes['postType'],
 		'posts_per_page' => $attributes['postsToShow'],
 		'post_status' => 'publish',
+        'tax_query' => array(
+            'relation' => 'AND',
+        ),
+        'meta_query' => array(
+            'relation' => 'AND',
+        ),
+        'date_query' => array(
+            'relation' => 'AND',
+            'inclusive' => true,
+        ),
 		'order' => $attributes['order'],
 		'orderby' => $attributes['orderBy'],
-		'paged' => $paged
+		'paged' => $paged,
+        'post__not_in' => array ($post->ID)
 	);
 
 	if ( isset( $attributes['taxonomy']) && isset( $attributes['term'] ) ) {
@@ -76,12 +153,16 @@ function ptam_custom_posts( $attributes ) {
 			) );
 		}
 	}
+
+    $list_items_markup = '';
+
+    $list_items_markup .= ptam_filtering($attributes, $post_args, $attributes['postType']);
+
 	$image_placememt_options = $attributes['imageLocation'];
 	$taxonomy_placement_options = $attributes['taxonomyLocation'];
 	$image_size = $attributes['imageTypeSize'];
 	$recent_posts = new WP_Query( $post_args );
 
-	$list_items_markup = '';
 
 	if( $recent_posts->have_posts()):
 		while ( $recent_posts->have_posts() ) {
@@ -548,6 +629,18 @@ function ptam_register_custom_posts_block()
                 'type' => 'string',
                 'default' => 'inherit',
             ),
+            // filtering
+            'displayFiltering' => array(
+                'type' => 'boolean',
+                'default' => false,
+            ),
+            'filterableTaxonomies' => array(
+                'type' => 'array',
+                'items' => [
+                    'type' => 'string',
+                ],
+                'default' => []
+            )
         ),
         'render_callback' => 'ptam_custom_posts',
         'editor_script' => 'ptam-custom-posts-gutenberg'
@@ -555,6 +648,26 @@ function ptam_register_custom_posts_block()
 }
 
 add_action( 'init', 'ptam_register_custom_posts_block' );
+
+
+function ptam_register_query_vars( $vars ) {
+
+    // add all public taxonomies as query vars
+    $args = array(
+        'public'   => true,
+        '_builtin' => false
+    );
+    $output = 'names'; // or objects
+    $operator = 'and'; // 'and' or 'or'
+    $taxonomies = get_taxonomies( $args, $output, $operator );
+    if ( $taxonomies ) {
+        foreach ( $taxonomies  as $taxonomy ) {
+            $vars[] = 'ptam_' . $taxonomy;
+        }
+    }
+    return $vars;
+}
+add_filter( 'query_vars', 'ptam_register_query_vars' );
 
 /**
  * Add image sizes

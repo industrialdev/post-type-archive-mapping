@@ -1,8 +1,7 @@
 /**
  * External dependencies
  */
-import moment from 'moment';
-import classnames from 'classnames';
+
 import axios from 'axios';
 
 var HtmlToReactParser = require('html-to-react').Parser;
@@ -37,13 +36,11 @@ class PTAM_Filter_Posts extends Component {
         super(...arguments);
 
         this.get_latest_data = this.get_latest_data.bind(this);
-        this.get_latest_posts = this.get_latest_posts.bind(this);
         this.get_term_list = this.get_term_list.bind(this);
 
         this.state = {
             loading: true,
             postType: 'post',
-            taxonomy: 'category',
             postTypeList: [],
             taxonomyList: [],
             termsList: [],
@@ -52,23 +49,6 @@ class PTAM_Filter_Posts extends Component {
         };
 
         this.get_latest_data();
-    }
-
-    get_latest_posts(object = {}) {
-        this.setState({'loading': true});
-        const props = jQuery.extend({}, this.props.attributes, object);
-        let {postType, order, orderBy, taxonomy, avatarSize, imageType, imageTypeSize, term, postsToShow, imageCrop, linkColor} = props;
-
-        axios.get(ptam_globals.rest_url + `ptam/v1/get_posts/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${avatarSize}/${imageType}/${imageTypeSize}/${linkColor}`).then((response) => {
-            // Now Set State
-            this.setState({
-                loading: false,
-                latestPosts: response.data.posts,
-                imageSizes: response.data.image_sizes,
-                userTaxonomies: response.data.taxonomies,
-                userTerms: response.data.terms
-            });
-        });
     }
 
     get_term_list(object = {}) {
@@ -111,7 +91,7 @@ class PTAM_Filter_Posts extends Component {
             // Get Post Types
             axios.get(ptam_globals.rest_url + 'wp/v2/types').then((response) => {
                 $.each(response.data, function (key, value) {
-                    if ('attachment' != key && 'wp_block' != key) {
+                    if ('attachment' !== key && 'wp_block' !== key) {
                         postTypeList.push({'value': key, 'label': value.name});
                     }
                 });
@@ -158,12 +138,14 @@ class PTAM_Filter_Posts extends Component {
     render() {
         let htmlToReactParser = new HtmlToReactParser();
         const {attributes, setAttributes} = this.props;
-        const {postType, term, taxonomy, displayPostDate, displayPostDateBefore, displayPostExcerpt, displayPostAuthor,
+        const {
+            postType, term, taxonomy, displayPostDate, displayPostDateBefore, displayPostExcerpt, displayPostAuthor,
             displayPostImage, displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow,
             readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization,
             displayTaxonomies, trimWords, titleAlignment, imageAlignment, metaAlignment, contentAlignment, padding,
             border, borderRounded, borderColor, backgroundColor, titleColor, linkColor, contentColor, dateColor,
-            continueReadingColor} = attributes;
+            continueReadingColor
+        } = attributes;
 
         let userTaxonomies = this.state.userTaxonomies;
         let userTaxonomiesArray = [];
@@ -172,54 +154,25 @@ class PTAM_Filter_Posts extends Component {
         }
         let latestPosts = this.state.latestPosts;
 
-        // Thumbnail options
-        const imageLocationOptions = [
-            {value: 'regular', label: __('Regular placement', 'post-type-archive-mapping')},
-            {value: 'below_title', label: __('Image Below Title', 'post-type-archive-mapping')},
-            {value: 'below_title_and_meta', label: __('Below title and post meta', 'post-type-archive-mapping')},
-            {value: 'bottom', label: __('Image on bottom', 'post-type-archive-mapping')}
-        ];
-        let imageSizeOptions = [];
-        let imageSizes = this.state.imageSizes;
-        for (var key in imageSizes) {
-            imageSizeOptions.push({value: key, label: key})
-        }
 
-        let imageDisplayOptionsTypes = [];
-        imageDisplayOptionsTypes.push({label: __('Gravatar', 'post-type-archive-mapping'), value: 'gravatar'});
-        imageDisplayOptionsTypes.push({label: __('Featured Image', 'post-type-archive-mapping'), value: 'regular'});
+        const inspectorControls = <InspectorControls>
+            <PanelBody title={__('Filter Posts Settings', 'post-type-archive-mapping')}>
 
-        const capitilization = changeCapitilization ? "ptam-text-lower-case" : '';
+                <SelectControl
+                    label={__('Post Type', 'post-type-archive-mapping')}
+                    options={this.state.postTypeList}
+                    value={postType}
+                    onChange={(value) => {
+                        this.props.setAttributes({postType: value, taxonomy: 'none', term: 0});
+                        this.get_latest_data({postType: value, taxonomy: 'none', term: 0});
+                    }}
+                />
 
-        const taxonomyLocationOptions = [
-            {value: 'regular', label: __('Regular placement', 'post-type-archive-mapping')},
-            {value: 'below_content', label: __('Below Content', 'post-type-archive-mapping')},
-        ];
+            </PanelBody>
+            <PanelBody title={__('Options', 'post-type-archive-mapping')}>
 
-        const alignmentOptions = [
-            {value: 'left', label: __('Left', 'post-type-archive-mapping')},
-            {value: 'center', label: __('Center', 'post-type-archive-mapping')},
-            {value: 'right', label: __('Right', 'post-type-archive-mapping')},
-        ];
-
-        const borderPaddingStyles = {
-            padding: padding + 'px',
-            border: border + 'px solid ' + borderColor,
-            borderRadius: borderRounded + 'px',
-            backgroundColor: backgroundColor,
-        };
-
-
-        const inspectorControls = (
-            <InspectorControls>
-                <PanelBody title={__('Filter Posts Settings', 'post-type-archive-mapping')}>
-
-                </PanelBody>
-                <PanelBody title={__('Options', 'post-type-archive-mapping')}>
-
-                </PanelBody>
-            </InspectorControls>
-        );
+            </PanelBody>
+        </InspectorControls>;
         if (this.state.loading) {
             return (
                 <Fragment>

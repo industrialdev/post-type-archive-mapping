@@ -4,7 +4,7 @@
 import moment from 'moment';
 import classnames from 'classnames';
 import axios from 'axios';
-var HtmlToReactParser = require('html-to-react').Parser;
+let HtmlToReactParser = require('html-to-react').Parser;
 
 const { Component, Fragment } = wp.element;
 
@@ -45,6 +45,7 @@ class PTAM_Custom_Posts extends Component {
 		this.toggleDisplayPostImage = this.toggleDisplayPostImage.bind( this );
 		this.toggleDisplayPostLink = this.toggleDisplayPostLink.bind( this );
 		this.toggleDisplayPagination = this.toggleDisplayPagination.bind(this);
+		this.toggleDisplayFiltering = this.toggleDisplayFiltering.bind(this);
 		this.get_latest_data = this.get_latest_data.bind(this);
 		this.get_latest_posts = this.get_latest_posts.bind(this);
 		this.get_term_list = this.get_term_list.bind(this);
@@ -128,7 +129,7 @@ class PTAM_Custom_Posts extends Component {
 				// Get Post Types
 				axios.get(ptam_globals.rest_url + 'wp/v2/types').then( ( response ) => {
 					$.each( response.data, function( key, value ) {
-						if( 'attachment' != key && 'wp_block' != key ) {
+						if( 'attachment' !== key && 'wp_block' !== key ) {
 							postTypeList.push( { 'value': key, 'label': value.name } );
 						}
 					} );
@@ -219,22 +220,29 @@ class PTAM_Custom_Posts extends Component {
 		setAttributes( { pagination: ! pagination } );
 	}
 
+	toggleDisplayFiltering() {
+		const { displayFiltering } = this.props.attributes;
+		const { setAttributes } = this.props;
+
+		setAttributes( { displayFiltering: ! displayFiltering } );
+	}
+
 	toggleCapitilization = () => {
 		const { changeCapitilization } = this.props.attributes;
 		const { setAttributes } = this.props;
 		setAttributes( { changeCapitilization: ! changeCapitilization } );
-	}
+	};
 
 	toggleTaxonomyDisplay = () => {
 		const { displayTaxonomies } = this.props.attributes;
 		const { setAttributes } = this.props;
 		setAttributes( { displayTaxonomies: ! displayTaxonomies } );
-	}
+	};
 
 	trimWords = ( value ) => {
 		const { setAttributes } = this.props;
 		setAttributes( { trimWords: value } );
-	}
+	};
 
 	customizeReadMoreText() {
 		const { readMoreText } = this.props.attributes;
@@ -247,13 +255,13 @@ class PTAM_Custom_Posts extends Component {
 		this.setState( {
 			imageLocation: value
 		});
-	}
+	};
 
 	onChangeTaxonomyLocation = (value) => {
 		this.setState( {
 			taxonomyLocation: value
 		});
-	}
+	};
 
 	onImageTypeChange = ( imageType ) => {
 		this.setState( {
@@ -263,7 +271,7 @@ class PTAM_Custom_Posts extends Component {
 		let latestPosts = [];
 		let imageSizes = [];
 
-		let { postType, order, orderBy, taxonomy, term, terms, imageTypeSize, avatarSize,postsToShow, imageCrop, linkColor } = this.props.attributes;
+		let { postType, order, orderBy, taxonomy, term, imageTypeSize, avatarSize,postsToShow, imageCrop, linkColor } = this.props.attributes;
 
 		linkColor = linkColor.replace( '#', '' );
 
@@ -279,7 +287,7 @@ class PTAM_Custom_Posts extends Component {
 
 		} );
 
-	}
+	};
 
 	onImageSizeChange = ( value ) => {
 		this.setState( {
@@ -305,7 +313,7 @@ class PTAM_Custom_Posts extends Component {
 
 		} );
 
-	}
+	};
 
 	excerptParse = ( excerpt ) => {
 		let htmlToReactParser = new HtmlToReactParser();
@@ -315,7 +323,7 @@ class PTAM_Custom_Posts extends Component {
 		excerpt = excerpt.join(' ');
 
 		return htmlToReactParser.parse(excerpt);
-	}
+	};
 
 	onAvatarSizeChange = ( value ) => {
 		let classRef = this;
@@ -343,43 +351,43 @@ class PTAM_Custom_Posts extends Component {
 
 			} );
 		}, 3000);
-	}
+	};
 
 	// Colors
 	onChangeBorderColor = ( value ) => {
 		this.props.setAttributes( { borderColor: value } );
-	}
+	};
 	onChangeBackgroundColor = ( value ) => {
 		this.props.setAttributes( { backgroundColor: value } );
-	}
+	};
 	onChangeTitleColor = ( value ) => {
 		this.props.setAttributes( { titleColor: value } );
-	}
+	};
 	onChangeContentColor = ( value ) => {
 		this.props.setAttributes( { contentColor: value } );
-	}
+	};
 	onChangeDateColor = ( value ) => {
 		this.props.setAttributes( { dateColor: value } );
-	}
+	};
 	onChangeLinkColor = ( value ) => {
 		this.props.setAttributes( { linkColor: value } );
 		this.props.attributes.linkColor = value;
 		this.get_latest_posts( {} );
-	}
+	};
 	onChangeContinueReadingColor = ( value ) => {
 		this.props.setAttributes( { continueReadingColor: value } );
-	}
+	};
 
 	render() {
 		let htmlToReactParser = new HtmlToReactParser();
 		const { attributes, setAttributes } = this.props;
-		const { postType, term, taxonomy, displayPostDate,displayPostDateBefore, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, orderBy, postsToShow, readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, linkColor, contentColor, dateColor, continueReadingColor } = attributes;
+		const { postType, term, taxonomy, displayPostDate,displayPostDateBefore, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, displayFiltering,filterableTaxonomies, orderBy, postsToShow, readMoreText, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, linkColor, contentColor, dateColor, continueReadingColor } = attributes;
 
 		let userTaxonomies = this.state.userTaxonomies;
 		let userTaxonomiesArray = [];
-		for (var key in userTaxonomies) {
+		for (let key in userTaxonomies) {
 			userTaxonomiesArray.push({value: key, label: userTaxonomies[key].label});
-		};
+		}
 		let latestPosts = this.state.latestPosts;
 
 		// Thumbnail options
@@ -425,22 +433,32 @@ class PTAM_Custom_Posts extends Component {
 				<PanelBody title={ __( 'Custom Posts Settings', 'post-type-archive-mapping' ) }>
 
 					<SelectControl
-							label={ __( 'Post Type', 'post-type-archive-mapping' ) }
-							options={ this.state.postTypeList }
-							value={ postType }
-							onChange={ ( value ) => { this.props.setAttributes( { postType: value, taxonomy: 'none', term: 0 } ); this.get_latest_data({ postType: value, taxonomy: 'none', term: 0 }); } }
+						label={__('Post Type', 'post-type-archive-mapping')}
+						options={this.state.postTypeList}
+						value={postType}
+						onChange={(value) => {
+							this.props.setAttributes({postType: value, taxonomy: 'none', term: 0});
+							this.get_latest_data({postType: value, taxonomy: 'none', term: 0});
+						}}
 					/>
 					<SelectControl
-							label={ __( 'Taxonomy',  'post-type-archive-mapping' ) }
-							options={ this.state.taxonomyList }
-							value={ taxonomy }
-							onChange={ ( value ) => { this.props.setAttributes( { taxonomy: value } ); this.get_term_list( { taxonomy: value } ); this.get_latest_posts({ taxonomy: value }); } }
+						label={__('Taxonomy', 'post-type-archive-mapping')}
+						options={this.state.taxonomyList}
+						value={taxonomy}
+						onChange={(value) => {
+							this.props.setAttributes({taxonomy: value});
+							this.get_term_list({taxonomy: value});
+							this.get_latest_posts({taxonomy: value});
+						}}
 					/>
 					<SelectControl
-							label={ __( 'Terms',  'post-type-archive-mapping' ) }
-							options={ this.state.termsList }
-							value={ term }
-							onChange={ ( value ) => { this.props.setAttributes( { term: value } ); this.get_latest_posts({ term: value }); } }
+						label={__('Terms', 'post-type-archive-mapping')}
+						options={this.state.termsList}
+						value={term}
+						onChange={(value) => {
+							this.props.setAttributes({term: value});
+							this.get_latest_posts({term: value});
+						}}
 					/>
 					<QueryControls
 						{ ...{ order, orderBy } }
@@ -692,6 +710,28 @@ class PTAM_Custom_Posts extends Component {
 						>
 					</PanelColorSettings>
 				</PanelBody>
+				<PanelBody title={ __( 'Filtering', 'post-type-archive-mapping' ) } initialOpen={false}>
+
+					<ToggleControl
+						label={ __( 'Display Filtering',  'post-type-archive-mapping' ) }
+						checked={ displayFiltering }
+						onChange={ this.toggleDisplayFiltering }
+					/>
+
+					{ displayFiltering &&
+					<SelectControl
+						multiple
+						label={__('Filterable Taxonomies', 'post-type-archive-mapping')}
+						options={this.state.taxonomyList}
+						value={filterableTaxonomies}
+						onChange={(taxonomies) => {
+							this.setState( {taxonomies} );
+							this.props.setAttributes({filterableTaxonomies: taxonomies});
+						}}
+					/>
+					}
+
+				</PanelBody>
 			</InspectorControls>
 		);
 		if( this.state.loading ) {
@@ -771,7 +811,7 @@ class PTAM_Custom_Posts extends Component {
 					<BlockAlignmentToolbar
 						value={ align }
 						onChange={ ( value ) => {
-							if ( undefined == value ) {
+							if ( undefined === value ) {
 								value = 'wide';
 							}
 							setAttributes( { align: value } );
@@ -786,6 +826,27 @@ class PTAM_Custom_Posts extends Component {
 						'ptam-block-post-grid',
 					) }
 				>
+
+					{displayFiltering &&
+						<form class="grid grid--flex-md">
+							{filterableTaxonomies.map((tax) => {
+								if( tax.value !== false ) {
+									return (<div className="grid__col">
+										<label className="ptam-term-label">Filter by {tax}
+											<select name="photo_event" id="select-2" className="form__input" disable="disabled">
+											</select>
+											<i className="far fa-angle-down" aria-hidden="true"></i>
+										</label>
+									</div>);
+								}
+							})}
+							<div class="grid__col">
+								<div>&nbsp;</div>
+								<input type="submit" value="Filter" disabled="disabled"
+									   className="button button--primary button--full-width" />
+							</div>
+						</form>
+					}
 					<div
 						className={ classnames( {
 							'is-custom' : imageLocation !== 'regular',
