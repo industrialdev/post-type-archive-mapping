@@ -32,17 +32,23 @@ function ptam_get_taxonomy_terms( $post, $attributes = array() ) {
 	$taxonomies = get_object_taxonomies( $post->post_type, 'objects' );
 	$terms = array();
 	foreach( $taxonomies as $key => $taxonomy ) {
-		$term_list = get_the_terms( $post->ID, $key );
-		$term_array = array();
-		if ( $term_list && ! empty( $term_list ) ) {
-			foreach ( $term_list as $term ) {
-				$term_permalink = get_term_link( $term, $key );
-				$term_array[] = sprintf( '<a href="%s" style="color: %s; text-decoration: none; box-shadow: unset;">%s</a>', esc_url( $term_permalink ),  esc_attr( $attributes['linkColor'] ), esc_html( $term->name ) );
-			}
-			$terms[$key] = implode( ', ', $term_array );
-		} else {
-			$terms[$key] = false;
-		}
+	    if ($taxonomy->public){
+
+            $term_list = get_the_terms( $post->ID, $key );
+            $term_array = array();
+            if ( $term_list && ! empty( $term_list ) ) {
+                foreach ( $term_list as $term ) {
+                    $term_permalink = get_term_link( $term, $key );
+                    $term_array[] = sprintf( '<a href="%s" style="color: %s; text-decoration: none; box-shadow: unset;">%s</a>', esc_url( $term_permalink ),  esc_attr( $attributes['linkColor'] ), esc_html( $term->name ) );
+                }
+                $terms[$key] = implode( ', ', $term_array );
+            } else {
+                $terms[$key] = false;
+            }
+
+        } else {
+            $terms[$key] = false;
+        }
 	}
 	foreach( $taxonomies as $key => $taxonomy ) {
 		if ( false === $terms[$key] ) continue;
