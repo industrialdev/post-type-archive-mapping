@@ -30,19 +30,12 @@ const {
     BlockAlignmentToolbar,
     BlockControls,
     PanelColorSettings,
-} = wp.editor;
+} = wp.blockEditor;
 
 class PTAM_Filter_Posts extends Component {
     constructor() {
         super(...arguments);
 
-        this.toggleDisplayPostDate = this.toggleDisplayPostDate.bind(this);
-        this.toggleDisplayPostDateBefore = this.toggleDisplayPostDateBefore.bind(this);
-        this.toggleDisplayPostExcerpt = this.toggleDisplayPostExcerpt.bind(this);
-        this.toggleDisplayPostAuthor = this.toggleDisplayPostAuthor.bind(this);
-        this.toggleDisplayPostImage = this.toggleDisplayPostImage.bind(this);
-        this.toggleDisplayPostLink = this.toggleDisplayPostLink.bind(this);
-        this.toggleDisplayPagination = this.toggleDisplayPagination.bind(this);
         this.get_latest_data = this.get_latest_data.bind(this);
         this.get_latest_posts = this.get_latest_posts.bind(this);
         this.get_term_list = this.get_term_list.bind(this);
@@ -51,18 +44,11 @@ class PTAM_Filter_Posts extends Component {
             loading: true,
             postType: 'post',
             taxonomy: 'category',
-            term: 0,
-            latestPosts: [],
             postTypeList: [],
             taxonomyList: [],
             termsList: [],
-            imageSizes: [],
             userTaxonomies: [],
             userTerms: [],
-            imageLocation: this.props.attributes.imageLocation,
-            taxonomyLocation: this.props.attributes.taxonomyLocation,
-            avatarSize: this.props.attributes.avatarSize,
-            imageType: this.props.attributes.imageType,
         };
 
         this.get_latest_data();
@@ -72,7 +58,7 @@ class PTAM_Filter_Posts extends Component {
         this.setState({'loading': true});
         const props = jQuery.extend({}, this.props.attributes, object);
         let {postType, order, orderBy, taxonomy, avatarSize, imageType, imageTypeSize, term, postsToShow, imageCrop, linkColor} = props;
-        linkColor = linkColor.replace('#', '');
+
         axios.get(ptam_globals.rest_url + `ptam/v1/get_posts/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${avatarSize}/${imageType}/${imageTypeSize}/${linkColor}`).then((response) => {
             // Now Set State
             this.setState({
@@ -115,7 +101,6 @@ class PTAM_Filter_Posts extends Component {
         const props = jQuery.extend({}, this.props.attributes, object);
         let {postType, order, orderBy, avatarSize, imageType, imageTypeSize, taxonomy, term, postsToShow, imageCrop, linkColor} = props;
 
-        linkColor = linkColor.replace('#', '');
 
         // Get Latest Posts and Chain Promises
         axios.get(ptam_globals.rest_url + `ptam/v1/get_posts/${postType}/${order}/${orderBy}/${taxonomy}/${term}/${postsToShow}/${imageCrop}/${avatarSize}/${imageType}/${imageTypeSize}/${linkColor}`).then((response) => {
