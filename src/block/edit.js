@@ -14,6 +14,8 @@ const { decodeEntities } = wp.htmlEntities;
 
 const {
 	PanelBody,
+	BaseControl,
+	CheckboxControl,
 	Placeholder,
 	QueryControls,
 	RangeControl,
@@ -46,6 +48,7 @@ class PTAM_Custom_Posts extends Component {
 		this.toggleDisplayPostLink = this.toggleDisplayPostLink.bind( this );
 		this.toggleDisplayPagination = this.toggleDisplayPagination.bind(this);
 		this.toggleDisplayFiltering = this.toggleDisplayFiltering.bind(this);
+		this.toggleDisplayFilteringFor = this.toggleDisplayFilteringFor.bind(this);
 		this.get_latest_data = this.get_latest_data.bind(this);
 		this.get_latest_posts = this.get_latest_posts.bind(this);
 		this.get_term_list = this.get_term_list.bind(this);
@@ -62,6 +65,7 @@ class PTAM_Custom_Posts extends Component {
 			imageSizes: [],
 			userTaxonomies: [],
 			userTerms: [],
+			filterableTaxonomies: [],
 			imageLocation: this.props.attributes.imageLocation,
 			taxonomyLocation: this.props.attributes.taxonomyLocation,
 			avatarSize: this.props.attributes.avatarSize,
@@ -226,6 +230,28 @@ class PTAM_Custom_Posts extends Component {
 
 		setAttributes( { displayFiltering: ! displayFiltering } );
 	}
+
+	toggleDisplayFilteringFor = (tax, checked) => {
+		let { filterableTaxonomies } = this.props.attributes;
+		const index = filterableTaxonomies.indexOf(tax);
+
+		if (index !== -1) {
+			if (!checked){ // remove
+				filterableTaxonomies.splice(index, 1);
+			}
+		}else{
+			if (checked){ // add
+				filterableTaxonomies.push(tax);
+			}
+		}
+
+		this.props.setAttributes( {
+			filterableTaxonomies: filterableTaxonomies
+		});
+
+		// force an update...
+		this.setState({filterableTaxonomies: filterableTaxonomies});
+	};
 
 	toggleCapitilization = () => {
 		const { changeCapitilization } = this.props.attributes;
@@ -421,320 +447,356 @@ class PTAM_Custom_Posts extends Component {
 		};
 
 
-		const inspectorControls = (
-			<InspectorControls>
-				<PanelBody title={ __( 'Custom Posts Settings', 'post-type-archive-mapping' ) }>
+		const inspectorControls = <InspectorControls>
+			<PanelBody title={__('Custom Posts Settings', 'post-type-archive-mapping')}>
 
-					<SelectControl
-						label={__('Post Type', 'post-type-archive-mapping')}
-						options={this.state.postTypeList}
-						value={postType}
-						onChange={(value) => {
-							this.props.setAttributes({postType: value, taxonomy: 'none', term: 0});
-							this.get_latest_data({postType: value, taxonomy: 'none', term: 0});
-						}}
-					/>
-					<SelectControl
-						label={__('Taxonomy', 'post-type-archive-mapping')}
-						options={this.state.taxonomyList}
-						value={taxonomy}
-						onChange={(value) => {
-							this.props.setAttributes({taxonomy: value});
-							this.get_term_list({taxonomy: value});
-							this.get_latest_posts({taxonomy: value});
-						}}
-					/>
-					<SelectControl
-						label={__('Terms', 'post-type-archive-mapping')}
-						options={this.state.termsList}
-						value={term}
-						onChange={(value) => {
-							this.props.setAttributes({term: value});
-							this.get_latest_posts({term: value});
-						}}
-					/>
-					<QueryControls
-						{ ...{ order, orderBy } }
-						numberOfItems={ postsToShow }
-						onOrderChange={ ( value ) => { this.props.setAttributes( { order: value } ); this.get_latest_posts({order: value }); } }
-						onOrderByChange={ ( value ) => { this.props.setAttributes( { orderBy: value } ); this.get_latest_posts({orderBy: value }); } }
-						onNumberOfItemsChange={ ( value ) => { this.props.setAttributes( { postsToShow: value } ); this.get_latest_posts({ postsToShow: value } ); } }
-					/>
-					{ postLayout === 'grid' &&
-						<RangeControl
-							label={ __( 'Columns',  'post-type-archive-mapping' ) }
-							value={ columns }
-							onChange={ ( value ) => this.props.setAttributes( { columns: value } ) }
-							min={ 2 }
-							max={ ! hasPosts ? MAX_POSTS_COLUMNS : Math.min( MAX_POSTS_COLUMNS, latestPosts.length ) }
-						/>
-					}
-				</PanelBody>
-				<PanelBody title={ __( 'Options', 'post-type-archive-mapping' ) }>
-					<ToggleControl
-						label={ __( 'Display Featured Image',  'post-type-archive-mapping' ) }
-						checked={ displayPostImage }
-						onChange={ this.toggleDisplayPostImage }
-					/>
-					{ displayPostImage &&
-						<Fragment>
-							<SelectControl
-								label={ __( 'Image Type',  'post-type-archive-mapping' ) }
-								options={ imageDisplayOptionsTypes}
-								value={ imageType }
-								onChange={ ( value ) => { this.props.setAttributes( { imageType: value } ); this.onImageTypeChange( value ); } }
-							/>
-							{ 'gravatar' === imageType ?
-								<div>
-									<RangeControl
-										label={ __( 'Avatar Size',  'post-type-archive-mapping' ) }
-										value={ avatarSize }
-										onChange={ ( value ) => { this.props.setAttributes( { avatarSize: value } ); this.onAvatarSizeChange( value ); } }
-										min={ 16 }
-										max={ 512 }
-									/>
-								</div>
-								: ''
-							}
-							{ 'regular' === imageType ?
-								<SelectControl
-									label={ __( 'Featured Image Size',  'post-type-archive-mapping' ) }
-									options={ imageSizeOptions }
-									value={ imageTypeSize }
-									onChange={ ( value ) => { this.props.setAttributes( { imageTypeSize: value } ); this.onImageSizeChange( value ); }}/>
-								: ''
-							}
-							<SelectControl
-								label={ __( 'Image Location',  'post-type-archive-mapping' ) }
-								options={ imageLocationOptions }
-								value={ this.state.imageLocation }
-								onChange={ ( value ) => { this.props.setAttributes( { imageLocation: value } ); this.onChangeLocation(value);  } }
-							/>
-						</Fragment>
-					}
-					<ToggleControl
-						label={ __( 'Display Taxonomies',  'post-type-archive-mapping' ) }
-						checked={ displayTaxonomies }
-						onChange={ this.toggleTaxonomyDisplay }
-					/>
-					{ displayTaxonomies &&
-						<SelectControl
-							label={ __( 'Taxonomy Location',  'post-type-archive-mapping' ) }
-							options={ taxonomyLocationOptions }
-							value={ this.state.taxonomyLocation }
-							onChange={ ( value ) => {this.onChangeTaxonomyLocation(value); this.props.setAttributes( { taxonomyLocation: value } ) } }
-						/>
-					}
-					<ToggleControl
-						label={ __( 'Display Post Author',  'post-type-archive-mapping' ) }
-						checked={ displayPostAuthor }
-						onChange={ this.toggleDisplayPostAuthor }
-					/>
-					<ToggleControl
-						label={ __( 'Display Post Date',  'post-type-archive-mapping' ) }
-						checked={ displayPostDate }
-						onChange={ this.toggleDisplayPostDate }
-					/>
-					<ToggleControl
-						label={ __( 'Display date before title',  'post-type-archive-mapping' ) }
-						checked={ displayPostDateBefore }
-						onChange={ this.toggleDisplayPostDateBefore }
-					/>
-					<ToggleControl
-						label={ __( 'Display Post Excerpt',  'post-type-archive-mapping' ) }
-						checked={ displayPostExcerpt }
-						onChange={ this.toggleDisplayPostExcerpt }
-					/>
-					{ displayPostExcerpt &&
-						<TextControl
-							label={ __( 'Maximum Word Length of Excerpt',  'post-type-archive-mapping' ) }
-							type="number"
-							value={ trimWords }
-							onChange={ ( value ) => this.trimWords( value ) }
-						/>
-					}
-					<ToggleControl
-						label={ __( 'Display Pagination',  'post-type-archive-mapping' ) }
-						checked={ pagination }
-						onChange={ this.toggleDisplayPagination }
-					/>
-					<ToggleControl
-						label={ __( 'Change Capitilization',  'post-type-archive-mapping' ) }
-						checked={ changeCapitilization }
-						onChange={ this.toggleCapitilization }
-					/>
-					<ToggleControl
-						label={ __( 'Display Continue Reading Link',  'post-type-archive-mapping' ) }
-						checked={ displayPostLink }
-						onChange={ this.toggleDisplayPostLink }
-					/>
-					{ displayPostLink &&
-					<TextControl
-						label={ __( 'Customize Read More Link',  'post-type-archive-mapping' ) }
-						type="text"
-						value={ readMoreText }
-						onChange={ ( value ) => this.props.setAttributes( { readMoreText: value } ) }
-					/>
-					}
-					{displayPostLink &&
-					<TextControl
-						label={__('Customize Read Class Name', 'post-type-archive-mapping')}
-						type="text"
-						value={readMoreClassName}
-						onChange={(value) => this.props.setAttributes({readMoreClassName: value})}
-					/>
-					}
-				</PanelBody>
-				{ postLayout === 'grid' &&
-					<PanelBody title={ __( 'Alignment', 'post-type-archive-mapping' ) } initialOpen={false}>
-						<SelectControl
-							label={ __( 'Title Alignment', 'post-type-archive-mapping' ) }
-							options={ alignmentOptions }
-							value={ titleAlignment }
-							onChange={ ( value ) => { this.props.setAttributes( { titleAlignment: value } ); } }
-						/>
-						<SelectControl
-							label={ __( 'Image Alignment', 'post-type-archive-mapping' ) }
-							options={ alignmentOptions }
-							value={ imageAlignment }
-							onChange={ ( value ) => { this.props.setAttributes( { imageAlignment: value } ); } }
-						/>
-						<SelectControl
-							label={ __( 'Meta Alignment', 'post-type-archive-mapping' ) }
-							options={ alignmentOptions }
-							value={ metaAlignment }
-							onChange={ ( value ) => { this.props.setAttributes( { metaAlignment: value } ); } }
-						/>
-						<SelectControl
-							label={ __( 'Content Alignment', 'post-type-archive-mapping' ) }
-							options={ alignmentOptions }
-							value={ contentAlignment }
-							onChange={ ( value ) => { this.props.setAttributes( { contentAlignment: value } ); } }
-						/>
-					</PanelBody>
+				<SelectControl
+					label={__('Post Type', 'post-type-archive-mapping')}
+					options={this.state.postTypeList}
+					value={postType}
+					onChange={(value) => {
+						this.props.setAttributes({postType: value, taxonomy: 'none', term: 0});
+						this.get_latest_data({postType: value, taxonomy: 'none', term: 0});
+					}}
+				/>
+				<SelectControl
+					label={__('Taxonomy', 'post-type-archive-mapping')}
+					options={this.state.taxonomyList}
+					value={taxonomy}
+					onChange={(value) => {
+						this.props.setAttributes({taxonomy: value});
+						this.get_term_list({taxonomy: value});
+						this.get_latest_posts({taxonomy: value});
+					}}
+				/>
+				<SelectControl
+					label={__('Terms', 'post-type-archive-mapping')}
+					options={this.state.termsList}
+					value={term}
+					onChange={(value) => {
+						this.props.setAttributes({term: value});
+						this.get_latest_posts({term: value});
+					}}
+				/>
+				<QueryControls
+					{...{order, orderBy}}
+					numberOfItems={postsToShow}
+					onOrderChange={(value) => {
+						this.props.setAttributes({order: value});
+						this.get_latest_posts({order: value});
+					}}
+					onOrderByChange={(value) => {
+						this.props.setAttributes({orderBy: value});
+						this.get_latest_posts({orderBy: value});
+					}}
+					onNumberOfItemsChange={(value) => {
+						this.props.setAttributes({postsToShow: value});
+						this.get_latest_posts({postsToShow: value});
+					}}
+				/>
+				{postLayout === 'grid' &&
+				<RangeControl
+					label={__('Columns', 'post-type-archive-mapping')}
+					value={columns}
+					onChange={(value) => this.props.setAttributes({columns: value})}
+					min={2}
+					max={!hasPosts ? MAX_POSTS_COLUMNS : Math.min(MAX_POSTS_COLUMNS, latestPosts.length)}
+				/>
 				}
-				<PanelBody title={ __( 'Borders and Padding', 'post-type-archive-mapping' ) } initialOpen={false}>
-					<RangeControl
-						label={ __( 'Padding', 'post-type-archive-mapping' ) }
-						value={ padding }
-						onChange={ ( value ) => this.props.setAttributes( { padding: value } ) }
-						min={ 0 }
-						max={ 60 }
-						step={ 1 }
-					/>
-					<RangeControl
-						label={ __( 'Border', 'post-type-archive-mapping' ) }
-						value={ border }
-						onChange={ ( value ) => this.props.setAttributes( { border: value } ) }
-						min={ 0 }
-						max={ 10 }
-						step={ 1 }
-					/>
-					<PanelColorSettings
-						title={ __( 'Border Color', 'post-type-archive-mapping' ) }
-						initialOpen={ true }
-						colorSettings={ [ {
-							value: borderColor,
-							onChange: this.onChangeBorderColor,
-							label: __( 'Border Color', 'post-type-archive-mapping' ),
-						} ] }
-						>
-					</PanelColorSettings>
-					<RangeControl
-						label={ __( 'Border Rounded', 'post-type-archive-mapping' ) }
-						value={ borderRounded }
-						onChange={ ( value ) => this.props.setAttributes( { borderRounded: value } ) }
-						min={ 0 }
-						max={ 10 }
-						step={ 1 }
-					/>
-				</PanelBody>
-				<PanelBody title={ __( 'Background and Colors', 'post-type-archive-mapping' ) } initialOpen={false}>
-					<PanelColorSettings
-						title={ __( 'Background Color', 'post-type-archive-mapping' ) }
-						initialOpen={ true }
-						colorSettings={ [ {
-							value: backgroundColor,
-							onChange: this.onChangeBackgroundColor,
-							label: __( 'Background Color', 'post-type-archive-mapping' ),
-						} ] }
-						>
-					</PanelColorSettings>
-					<PanelColorSettings
-						title={ __( 'Title Color', 'post-type-archive-mapping' ) }
-						initialOpen={ true }
-						colorSettings={ [ {
-							value: titleColor,
-							onChange: this.onChangeTitleColor,
-							label: __( 'Title Color', 'post-type-archive-mapping' ),
-						} ] }
-						>
-					</PanelColorSettings>
-					<PanelColorSettings
-						title={ __( 'Content Color', 'post-type-archive-mapping' ) }
-						initialOpen={ true }
-						colorSettings={ [ {
-							value: contentColor,
-							onChange: this.onChangeContentColor,
-							label: __( 'Content Color', 'post-type-archive-mapping' ),
-						} ] }
-						>
-					</PanelColorSettings>
-					<PanelColorSettings
-						title={ __( 'Date Color', 'post-type-archive-mapping' ) }
-						initialOpen={ true }
-						colorSettings={ [ {
-							value: dateColor,
-							onChange: this.onChangeDateColor,
-							label: __( 'Date Color', 'post-type-archive-mapping' ),
-						} ] }
-					>
-					</PanelColorSettings>
-					<PanelColorSettings
-						title={ __( 'Link Color', 'post-type-archive-mapping' ) }
-						initialOpen={ true }
-						colorSettings={ [ {
-							value: linkColor,
-							onChange: this.onChangeLinkColor,
-							label: __( 'Link Color', 'post-type-archive-mapping' ),
-						} ] }
-						>
-					</PanelColorSettings>
-					<PanelColorSettings
-						title={ __( 'Continue Reading Color', 'post-type-archive-mapping' ) }
-						initialOpen={ true }
-						colorSettings={ [ {
-							value: continueReadingColor,
-							onChange: this.onChangeContinueReadingColor,
-							label: __( 'Continue Reading Color', 'post-type-archive-mapping' ),
-						} ] }
-						>
-					</PanelColorSettings>
-				</PanelBody>
-				<PanelBody title={ __( 'Filtering', 'post-type-archive-mapping' ) } initialOpen={false}>
-
-					<ToggleControl
-						label={ __( 'Display Filtering',  'post-type-archive-mapping' ) }
-						checked={ displayFiltering }
-						onChange={ this.toggleDisplayFiltering }
-					/>
-
-					{ displayFiltering &&
+			</PanelBody>
+			<PanelBody title={__('Options', 'post-type-archive-mapping')}>
+				<ToggleControl
+					label={__('Display Featured Image', 'post-type-archive-mapping')}
+					checked={displayPostImage}
+					onChange={this.toggleDisplayPostImage}
+				/>
+				{displayPostImage &&
+				<Fragment>
 					<SelectControl
-						multiple
-						label={__('Filterable Taxonomies', 'post-type-archive-mapping')}
-						options={this.state.taxonomyList}
-						value={filterableTaxonomies}
-						onChange={(taxonomies) => {
-							this.setState( {taxonomies} );
-							this.props.setAttributes({filterableTaxonomies: taxonomies});
+						label={__('Image Type', 'post-type-archive-mapping')}
+						options={imageDisplayOptionsTypes}
+						value={imageType}
+						onChange={(value) => {
+							this.props.setAttributes({imageType: value});
+							this.onImageTypeChange(value);
 						}}
 					/>
+					{'gravatar' === imageType ?
+						<div>
+							<RangeControl
+								label={__('Avatar Size', 'post-type-archive-mapping')}
+								value={avatarSize}
+								onChange={(value) => {
+									this.props.setAttributes({avatarSize: value});
+									this.onAvatarSizeChange(value);
+								}}
+								min={16}
+								max={512}
+							/>
+						</div>
+						: ''
 					}
+					{'regular' === imageType ?
+						<SelectControl
+							label={__('Featured Image Size', 'post-type-archive-mapping')}
+							options={imageSizeOptions}
+							value={imageTypeSize}
+							onChange={(value) => {
+								this.props.setAttributes({imageTypeSize: value});
+								this.onImageSizeChange(value);
+							}}/>
+						: ''
+					}
+					<SelectControl
+						label={__('Image Location', 'post-type-archive-mapping')}
+						options={imageLocationOptions}
+						value={this.state.imageLocation}
+						onChange={(value) => {
+							this.props.setAttributes({imageLocation: value});
+							this.onChangeLocation(value);
+						}}
+					/>
+				</Fragment>
+				}
+				<ToggleControl
+					label={__('Display Taxonomies', 'post-type-archive-mapping')}
+					checked={displayTaxonomies}
+					onChange={this.toggleTaxonomyDisplay}
+				/>
+				{displayTaxonomies &&
+				<SelectControl
+					label={__('Taxonomy Location', 'post-type-archive-mapping')}
+					options={taxonomyLocationOptions}
+					value={this.state.taxonomyLocation}
+					onChange={(value) => {
+						this.onChangeTaxonomyLocation(value);
+						this.props.setAttributes({taxonomyLocation: value})
+					}}
+				/>
+				}
+				<ToggleControl
+					label={__('Display Post Author', 'post-type-archive-mapping')}
+					checked={displayPostAuthor}
+					onChange={this.toggleDisplayPostAuthor}
+				/>
+				<ToggleControl
+					label={__('Display Post Date', 'post-type-archive-mapping')}
+					checked={displayPostDate}
+					onChange={this.toggleDisplayPostDate}
+				/>
+				<ToggleControl
+					label={__('Display date before title', 'post-type-archive-mapping')}
+					checked={displayPostDateBefore}
+					onChange={this.toggleDisplayPostDateBefore}
+				/>
+				<ToggleControl
+					label={__('Display Post Excerpt', 'post-type-archive-mapping')}
+					checked={displayPostExcerpt}
+					onChange={this.toggleDisplayPostExcerpt}
+				/>
+				{displayPostExcerpt &&
+				<TextControl
+					label={__('Maximum Word Length of Excerpt', 'post-type-archive-mapping')}
+					type="number"
+					value={trimWords}
+					onChange={(value) => this.trimWords(value)}
+				/>
+				}
+				<ToggleControl
+					label={__('Display Pagination', 'post-type-archive-mapping')}
+					checked={pagination}
+					onChange={this.toggleDisplayPagination}
+				/>
+				<ToggleControl
+					label={__('Change Capitilization', 'post-type-archive-mapping')}
+					checked={changeCapitilization}
+					onChange={this.toggleCapitilization}
+				/>
+				<ToggleControl
+					label={__('Display Continue Reading Link', 'post-type-archive-mapping')}
+					checked={displayPostLink}
+					onChange={this.toggleDisplayPostLink}
+				/>
+				{displayPostLink &&
+				<TextControl
+					label={__('Customize Read More Link', 'post-type-archive-mapping')}
+					type="text"
+					value={readMoreText}
+					onChange={(value) => this.props.setAttributes({readMoreText: value})}
+				/>
+				}
+				{displayPostLink &&
+				<TextControl
+					label={__('Customize Read Class Name', 'post-type-archive-mapping')}
+					type="text"
+					value={readMoreClassName}
+					onChange={(value) => this.props.setAttributes({readMoreClassName: value})}
+				/>
+				}
+			</PanelBody>
+			{postLayout === 'grid' &&
+			<PanelBody title={__('Alignment', 'post-type-archive-mapping')} initialOpen={false}>
+				<SelectControl
+					label={__('Title Alignment', 'post-type-archive-mapping')}
+					options={alignmentOptions}
+					value={titleAlignment}
+					onChange={(value) => {
+						this.props.setAttributes({titleAlignment: value});
+					}}
+				/>
+				<SelectControl
+					label={__('Image Alignment', 'post-type-archive-mapping')}
+					options={alignmentOptions}
+					value={imageAlignment}
+					onChange={(value) => {
+						this.props.setAttributes({imageAlignment: value});
+					}}
+				/>
+				<SelectControl
+					label={__('Meta Alignment', 'post-type-archive-mapping')}
+					options={alignmentOptions}
+					value={metaAlignment}
+					onChange={(value) => {
+						this.props.setAttributes({metaAlignment: value});
+					}}
+				/>
+				<SelectControl
+					label={__('Content Alignment', 'post-type-archive-mapping')}
+					options={alignmentOptions}
+					value={contentAlignment}
+					onChange={(value) => {
+						this.props.setAttributes({contentAlignment: value});
+					}}
+				/>
+			</PanelBody>
+			}
+			<PanelBody title={__('Borders and Padding', 'post-type-archive-mapping')} initialOpen={false}>
+				<RangeControl
+					label={__('Padding', 'post-type-archive-mapping')}
+					value={padding}
+					onChange={(value) => this.props.setAttributes({padding: value})}
+					min={0}
+					max={60}
+					step={1}
+				/>
+				<RangeControl
+					label={__('Border', 'post-type-archive-mapping')}
+					value={border}
+					onChange={(value) => this.props.setAttributes({border: value})}
+					min={0}
+					max={10}
+					step={1}
+				/>
+				<PanelColorSettings
+					title={__('Border Color', 'post-type-archive-mapping')}
+					initialOpen={true}
+					colorSettings={[{
+						value: borderColor,
+						onChange: this.onChangeBorderColor,
+						label: __('Border Color', 'post-type-archive-mapping'),
+					}]}
+				>
+				</PanelColorSettings>
+				<RangeControl
+					label={__('Border Rounded', 'post-type-archive-mapping')}
+					value={borderRounded}
+					onChange={(value) => this.props.setAttributes({borderRounded: value})}
+					min={0}
+					max={10}
+					step={1}
+				/>
+			</PanelBody>
+			<PanelBody title={__('Background and Colors', 'post-type-archive-mapping')} initialOpen={false}>
+				<PanelColorSettings
+					title={__('Background Color', 'post-type-archive-mapping')}
+					initialOpen={true}
+					colorSettings={[{
+						value: backgroundColor,
+						onChange: this.onChangeBackgroundColor,
+						label: __('Background Color', 'post-type-archive-mapping'),
+					}]}
+				>
+				</PanelColorSettings>
+				<PanelColorSettings
+					title={__('Title Color', 'post-type-archive-mapping')}
+					initialOpen={true}
+					colorSettings={[{
+						value: titleColor,
+						onChange: this.onChangeTitleColor,
+						label: __('Title Color', 'post-type-archive-mapping'),
+					}]}
+				>
+				</PanelColorSettings>
+				<PanelColorSettings
+					title={__('Content Color', 'post-type-archive-mapping')}
+					initialOpen={true}
+					colorSettings={[{
+						value: contentColor,
+						onChange: this.onChangeContentColor,
+						label: __('Content Color', 'post-type-archive-mapping'),
+					}]}
+				>
+				</PanelColorSettings>
+				<PanelColorSettings
+					title={__('Date Color', 'post-type-archive-mapping')}
+					initialOpen={true}
+					colorSettings={[{
+						value: dateColor,
+						onChange: this.onChangeDateColor,
+						label: __('Date Color', 'post-type-archive-mapping'),
+					}]}
+				>
+				</PanelColorSettings>
+				<PanelColorSettings
+					title={__('Link Color', 'post-type-archive-mapping')}
+					initialOpen={true}
+					colorSettings={[{
+						value: linkColor,
+						onChange: this.onChangeLinkColor,
+						label: __('Link Color', 'post-type-archive-mapping'),
+					}]}
+				>
+				</PanelColorSettings>
+				<PanelColorSettings
+					title={__('Continue Reading Color', 'post-type-archive-mapping')}
+					initialOpen={true}
+					colorSettings={[{
+						value: continueReadingColor,
+						onChange: this.onChangeContinueReadingColor,
+						label: __('Continue Reading Color', 'post-type-archive-mapping'),
+					}]}
+				>
+				</PanelColorSettings>
+			</PanelBody>
+			<PanelBody title={__('Filtering', 'post-type-archive-mapping')} initialOpen={false}>
 
-				</PanelBody>
-			</InspectorControls>
-		);
+				<ToggleControl
+					label={__('Display Filtering', 'post-type-archive-mapping')}
+					checked={displayFiltering}
+					onChange={this.toggleDisplayFiltering}
+				/>
+
+				{displayFiltering &&
+				<BaseControl label="Displays filters for:">
+				</BaseControl>
+				}
+
+				{displayFiltering &&
+				this.state.taxonomyList.map((tax, i) => {
+					if (tax.value !== "none") {
+						return <CheckboxControl
+							label={tax.label}
+							checked={(filterableTaxonomies.indexOf(tax.value) !== -1)}
+							onChange={(state) => {
+								this.toggleDisplayFilteringFor(tax.value, state);
+							}}
+						/>
+					}
+				})
+				}
+
+			</PanelBody>
+		</InspectorControls>;
 		if( this.state.loading ) {
 			return (
 				<Fragment>
