@@ -20,9 +20,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function ptam_blocks_block_assets() {
 
-    if(is_singular()) {
+    if(is_singular() || is_admin() ) {
 
-        if( has_block("ptam/custom-posts") || has_block("ptam/filter-posts")) {
+        if( has_block("ptam/custom-posts") || has_block("ptam/filter-posts") || is_admin() ) {
             // Load the compiled styles
             wp_enqueue_style(
                 'ptam-style-css',
