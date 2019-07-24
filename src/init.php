@@ -20,11 +20,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function ptam_blocks_block_assets() {
 
-	// Load the compiled styles
-	wp_enqueue_style(
-		'ptam-style-css',
-		PostTypeArchiveMapping::get_plugin_url( 'dist/blocks.style.build.css'),
-		PTAM_VERSION, 'all' );
+    if(is_singular()) {
+
+        if( has_block("ptam/custom-posts") || has_block("ptam/filter-posts")) {
+            // Load the compiled styles
+            wp_enqueue_style(
+                'ptam-style-css',
+                PostTypeArchiveMapping::get_plugin_url('dist/blocks.style.build.css'),
+                PTAM_VERSION, 'all');
+        }
+    }
 }
 add_action( 'enqueue_block_assets', 'ptam_blocks_block_assets' );
 

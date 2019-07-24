@@ -31,6 +31,7 @@ const {
 	BlockAlignmentToolbar,
 	BlockControls,
 	PanelColorSettings,
+	InspectorAdvancedControls,
 } = wp.blockEditor;
 
 
