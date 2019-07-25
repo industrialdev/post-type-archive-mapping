@@ -942,6 +942,12 @@ class PTAM_Custom_Posts extends Component {
 								}
 
 								<div className="ptam-block-post-grid-text">
+
+                                    { displayPostDate && post.post_date_gmt && displayPostDateBefore &&
+                                    <time dateTime={ moment( post.post_date_gmt ).utc().format() } className={ 'ptam-block-post-grid-date' } style={dateColorStyles}>
+                                        { moment( post.post_date_gmt ).local().format( 'MMMM DD, Y' ) }
+                                    </time>
+                                    }
 									<h2 className="entry-title" style={titleAlignmentStyles}><a href={ post.link } target="_blank" rel="bookmark" style={titleColorStyles}>{ decodeEntities( post.post_title.trim() ) || __( '(Untitled)', 'post-type-archive-mapping' ) }</a></h2>
 									{displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'below_title' === this.state.imageLocation ? (
 											<div className="ptam-block-post-grid-image" style={imageAlignmentStyles}>
@@ -959,7 +965,7 @@ class PTAM_Custom_Posts extends Component {
 											<div className="ptam-block-post-grid-author"><a className="ptam-text-link" target="_blank" href={ post.author_info.author_link } style={linkColorStyles}>{ post.author_info.display_name }</a></div>
 										}
 
-										{ displayPostDate && post.post_date_gmt &&
+										{ displayPostDate && post.post_date_gmt && !displayPostDateBefore &&
 											<time dateTime={ moment( post.post_date_gmt ).utc().format() } className={ 'ptam-block-post-grid-date' } style={dateColorStyles}>
 												{ moment( post.post_date_gmt ).local().format( 'MMMM DD, Y' ) }
 											</time>
