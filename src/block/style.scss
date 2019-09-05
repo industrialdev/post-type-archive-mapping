@@ -205,6 +205,17 @@
 		margin-top: 15px;
 	}
 
+	 .ptam-left-image,
+	 .ptam-left-image.is-list,
+	 .ptam-left-image.is-list.is-custom  {
+		 article{
+			 display: grid;
+			 grid-template-columns: auto 1fr;
+			 .entry-title{
+				 margin-top: 0;
+			 }
+		 }
+	 }
 	.is-list {
 		article {
 			display: grid;

@@ -6,4 +6,14 @@
   h2 a {
       text-decoration: none;
   }
+  .ptam-left-image,
+  .ptam-left-image.is-list.is-custom  {
+    article{
+      display: grid;
+      grid-template-columns: auto 1fr;
+      .entry-title{
+        margin-top: 0;
+      }
+    }
+  }
 }

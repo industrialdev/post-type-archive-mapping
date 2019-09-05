@@ -17,16 +17,120 @@ function ptam_get_profile_image( $attributes, $post_thumb_id = 0, $post_author =
 		} else {
 			$image = wp_get_attachment_image( $post_thumb_id, $post_thumb_size );
 		}
-		$list_item_markup .= sprintf(
-			'<div class="ptam-block-post-grid-image" %3$s><a href="%1$s" rel="bookmark">%2$s</a></div>',
-			esc_url( get_permalink( $post_id ) ),
-			$image,
-			'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['imageAlignment']}'" : ''
-		);
+		if ($image != ""){
+            $list_item_markup .= sprintf(
+                '<div class="ptam-block-post-grid-image" %3$s><a href="%1$s" rel="bookmark">%2$s</a></div>',
+                esc_url( get_permalink( $post_id ) ),
+                $image,
+                'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['imageAlignment']}'" : ''
+            );
+        }else{
+
+            $styleString = sprintf('width: %1$spx; height: %2$spx; ',
+                ptam_get_image_width($post_thumb_size),
+                ptam_get_image_height($post_thumb_size)
+            );
+
+            if ('grid' === $attributes['postLayout']){
+                $styleString .= "text-align: {$attributes['imageAlignment']}; ";
+            }
+
+            $list_item_markup .= sprintf(
+                '<div class="ptam-block-post-grid-image missing" style="%1$s"></div>',
+                $styleString
+            );
+        }
 		echo $list_item_markup;
 	}
 	return ob_get_clean();
 }
+
+/**
+ * Get size information for all currently-registered image sizes.
+ *
+ * @global $_wp_additional_image_sizes
+ * @uses   get_intermediate_image_sizes()
+ * @return array $sizes Data for all currently-registered image sizes.
+ */
+function ptam_get_image_sizes() {
+    global $_wp_additional_image_sizes;
+
+    $sizes = array();
+
+    foreach ( get_intermediate_image_sizes() as $_size ) {
+        if ( in_array( $_size, array('thumbnail', 'medium', 'medium_large', 'large') ) ) {
+            $sizes[ $_size ]['width']  = get_option( "{$_size}_size_w" );
+            $sizes[ $_size ]['height'] = get_option( "{$_size}_size_h" );
+            $sizes[ $_size ]['crop']   = (bool) get_option( "{$_size}_crop" );
+        } elseif ( isset( $_wp_additional_image_sizes[ $_size ] ) ) {
+            $sizes[ $_size ] = array(
+                'width'  => $_wp_additional_image_sizes[ $_size ]['width'],
+                'height' => $_wp_additional_image_sizes[ $_size ]['height'],
+                'crop'   => $_wp_additional_image_sizes[ $_size ]['crop'],
+            );
+        }
+    }
+
+    return $sizes;
+}
+
+/**
+ * Get size information for a specific image size.
+ *
+ * @uses   get_image_sizes()
+ * @param  string $size The image size for which to retrieve data.
+ * @return bool|array $size Size data about an image size or false if the size doesn't exist.
+ */
+function ptam_get_image_size( $size ) {
+    $sizes = ptam_get_image_sizes();
+
+    if ( isset( $sizes[ $size ] ) ) {
+        return $sizes[ $size ];
+    }
+
+    return false;
+}
+
+/**
+ * Get the width of a specific image size.
+ *
+ * @uses   get_image_size()
+ * @param  string $size The image size for which to retrieve data.
+ * @return bool|string $size Width of an image size or false if the size doesn't exist.
+ */
+function ptam_get_image_width( $size ) {
+    if ( ! $size = ptam_get_image_size( $size ) ) {
+        return false;
+    }
+
+    if ( isset( $size['width'] ) ) {
+        return $size['width'];
+    }
+
+    return false;
+}
+
+
+/**
+ * Get the height of a specific image size.
+ *
+ * @uses   get_image_size()
+ * @param  string $size The image size for which to retrieve data.
+ * @return bool|string $size Height of an image size or false if the size doesn't exist.
+ */
+function ptam_get_image_height( $size ) {
+    if ( ! $size = ptam_get_image_size( $size ) ) {
+        return false;
+    }
+
+    if ( isset( $size['height'] ) ) {
+        return $size['height'];
+    }
+
+    return false;
+}
+
+
 function ptam_get_taxonomy_terms( $post, $attributes = array() ) {
 	$markup = '';
 	$taxonomies = get_object_taxonomies( $post->post_type, 'objects' );
@@ -199,7 +303,7 @@ function ptam_custom_posts( $attributes ) {
 				esc_attr( $post_thumb_class ),
 				$article_style
 			);
-			if ( 'regular' === $image_placememt_options ) {
+			if ( 'regular' === $image_placememt_options || 'left' === $image_placememt_options ) {
 				$list_items_markup .= ptam_get_profile_image( $attributes, $post_thumb_id, $post->post_author, $post->ID );
 			}
 
@@ -243,7 +347,7 @@ function ptam_custom_posts( $attributes ) {
 				);
 
 					// Get the featured image
-					if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage']  && 'below_title' === $attributes['imageLocation']) {
+					if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage']  && 'below_title' === $image_placememt_options) {
 						if ($post_thumb_id){
 							$list_items_markup .= sprintf(
 								'<div class="ptam-block-post-grid-image" %3$s><a href="%1$s" rel="bookmark">%2$s</a></div>',
@@ -251,10 +355,20 @@ function ptam_custom_posts( $attributes ) {
 								ptam_get_profile_image( $attributes, $post_thumb_id, $post->post_author, $post->ID ),
 								'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['imageAlignment']}" : ''
 							);
-						}else{
+						}else {
+                            $post_thumb_size = $attributes['imageTypeSize'];
+                            $styleString = sprintf('width: %1$spx; height: %2$spx; ',
+                                ptam_get_image_width($post_thumb_size),
+                                ptam_get_image_height($post_thumb_size)
+                            );
+
+                            if ('grid' === $attributes['postLayout']){
+                                $styleString .= "text-align: {$attributes['imageAlignment']}; ";
+                            }
 							$list_items_markup .= sprintf(
-								'<div class="ptam-block-post-grid-image missing" %1$s></div>',
-								'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['imageAlignment']}" : '');
+								'<div class="ptam-block-post-grid-image missing" style="%1$s"></div>',
+                                $styleString
+                            );
 
 						}
 					}
@@ -285,7 +399,7 @@ function ptam_custom_posts( $attributes ) {
 						$list_items_markup .= ptam_get_taxonomy_terms( $post, $attributes );
 					}
 					// Get the featured image
-					if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] && 'below_title_and_meta' === $attributes['imageLocation']) {
+					if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] && 'below_title_and_meta' === $image_placememt_options) {
 						if ($post_thumb_id){
 							$list_items_markup .= sprintf(
 								'<div class="ptam-block-post-grid-image" %3$s><a href="%1$s" rel="bookmark">%2$s</a></div>',
@@ -410,6 +524,10 @@ function ptam_custom_posts( $attributes ) {
 	} else {
 		$grid_class .= ' is-grid';
 	}
+
+    if ('left' === $image_placememt_options){
+        $grid_class .= " ptam-left-image";
+    }
 
 	if ( isset( $attributes['columns'] ) && 'grid' === $attributes['postLayout'] ) {
 		$grid_class .= ' columns-' . $attributes['columns'];

@@ -411,12 +411,18 @@ class PTAM_Custom_Posts extends Component {
 		let latestPosts = this.state.latestPosts;
 
 		// Thumbnail options
-		const imageLocationOptions = [
+		let imageLocationOptions = [
 			{ value: 'regular', label: __('Regular placement', 'post-type-archive-mapping' ) },
 			{ value: 'below_title', label: __('Image Below Title', 'post-type-archive-mapping' ) },
 			{ value: 'below_title_and_meta', label: __('Below title and post meta', 'post-type-archive-mapping' ) },
 			{ value: 'bottom', label: __('Image on bottom', 'post-type-archive-mapping' ) }
 		];
+
+		if (postLayout === "list" || postLayout === "grid-list"){
+            imageLocationOptions.push( { value: 'left', label: __('Image on Left', 'post-type-archive-mapping' ) } );
+        }
+
+
 		let imageSizeOptions = [];
 		let imageSizes = this.state.imageSizes;
 		for ( var key in imageSizes ) {
@@ -918,7 +924,8 @@ class PTAM_Custom_Posts extends Component {
 							'is-list': postLayout === 'list',
 							'is-grid-list': postLayout === 'grid-list',
 							[ `columns-${ columns }` ]: postLayout === 'grid',
-							'ptam-post-grid-items' : 'ptam-post-grid-items'
+							'ptam-post-grid-items' : 'ptam-post-grid-items',
+							'ptam-left-image' : imageLocation === 'left'
 						} ) }
 					>
 						{ displayPosts.map( ( post, i ) =>
@@ -930,7 +937,7 @@ class PTAM_Custom_Posts extends Component {
 								style={ borderPaddingStyles }
 							>
 								{
-										displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && 'regular' === this.state.imageLocation ? (
+										displayPostImage && post.featured_image_src !== undefined && post.featured_image_src  && ('regular' === this.state.imageLocation || 'left' === this.state.imageLocation) ? (
 											<div className="ptam-block-post-grid-image" style={imageAlignmentStyles}>
 												<a href={ post.link } target="_blank" rel="bookmark">
 												{htmlToReactParser.parse(post.featured_image_src)}
