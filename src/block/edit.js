@@ -401,7 +401,7 @@ class PTAM_Custom_Posts extends Component {
 	render() {
 		let htmlToReactParser = new HtmlToReactParser();
 		const { attributes, setAttributes } = this.props;
-		const { postType, term, taxonomy, displayPostDate,displayPostDateBefore, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, displayFiltering,filterableTaxonomies, orderBy, postsToShow, readMoreText,readMoreClassName, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, linkColor, contentColor, dateColor, continueReadingColor } = attributes;
+		const { postType, term, taxonomy, displayPostDate,displayPostDateBefore, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, displayFiltering,filterableTaxonomies, orderBy, postsToShow, readMoreText,readMoreClassName, readMoreMetaField, readMoreMetaLabel, readMoreMetaClassName, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, linkColor, contentColor, dateColor, continueReadingColor } = attributes;
 
 		let userTaxonomies = this.state.userTaxonomies;
 		let userTaxonomiesArray = [];
@@ -638,6 +638,30 @@ class PTAM_Custom_Posts extends Component {
 					type="text"
 					value={readMoreClassName}
 					onChange={(value) => this.props.setAttributes({readMoreClassName: value})}
+				/>
+				}
+				{displayPostLink &&
+				<TextControl
+					label={__('Meta download link Key', 'post-type-archive-mapping')}
+					type="text"
+					value={readMoreMetaField}
+					onChange={(value) => this.props.setAttributes({readMoreMetaField: value})}
+				/>
+				}
+				{displayPostLink &&
+				<TextControl
+					label={__('Meta link download Label', 'post-type-archive-mapping')}
+					type="text"
+					value={readMoreMetaLabel}
+					onChange={(value) => this.props.setAttributes({readMoreMetaLabel: value})}
+				/>
+				}
+				{displayPostLink &&
+				<TextControl
+					label={__('Meta link download class names', 'post-type-archive-mapping')}
+					type="text"
+					value={readMoreMetaClassName}
+					onChange={(value) => this.props.setAttributes({readMoreMetaClassName: value})}
 				/>
 				}
 			</PanelBody>

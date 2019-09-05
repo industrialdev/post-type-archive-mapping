@@ -465,14 +465,28 @@ function ptam_custom_posts( $attributes ) {
 
 
                 if ( isset( $attributes['displayPostLink'] ) && $attributes['displayPostLink'] ) {
+                    $extraContent = "";
+                    if ( !empty($attributes['readMoreMetaField'])){
+                        $fieldName = $attributes['readMoreMetaField'];
+                        $metaContent = wp_get_attachment_url(get_post_meta( $post_id, $fieldName, true));
+                        $text = $attributes['readMoreMetaLabel'];
+                        $extraContent = sprintf('<a class="meta-link %3$s" href="%1$s" rel="bookmark" download>%2$s</a>',
+                            $metaContent,
+                            $text,
+                            $attributes['readMoreMetaClassName']
+                        );
+                    }
+
                     $list_items_markup .= sprintf(
-                        '<p><a class="ptam-block-post-grid-link ptam-text-link %4$s" href="%1$s" rel="bookmark" style="color: %3$s">%2$s</a></p>',
+                        '<p><a class="ptam-block-post-grid-link ptam-text-link %4$s" href="%1$s" rel="bookmark" style="color: %3$s">%2$s</a>%5$s</p>',
                         esc_url( get_permalink( $post_id ) ),
                         esc_html( $attributes['readMoreText'] ),
                         esc_attr( $attributes['continueReadingColor'] ),
-                        esc_attr( $attributes['readMoreClassName'])
+                        esc_attr( $attributes['readMoreClassName']),
+                        $extraContent
                     );
                 }
+
 
 				// Get the taxonomies
 				if ( isset( $attributes['displayTaxonomies'] ) && $attributes['displayTaxonomies'] && 'below_content' === $taxonomy_placement_options ) {
@@ -704,6 +718,18 @@ function ptam_register_custom_posts_block()
                 'default' => 'Continue Reading',
             ),
             'readMoreClassName' => array(
+                'type' => 'string',
+                'default' => ''
+            ),
+            'readMoreMetaField' => array(
+                'type' => 'string',
+                'default' => ''
+            ),
+            'readMoreMetaLabel' => array(
+                'type' => 'string',
+                'default' => ''
+            ),
+            'readMoreMetaClassName' => array(
                 'type' => 'string',
                 'default' => ''
             ),
