@@ -1,10 +1,10 @@
 <?php
 /*
-Plugin Name: Custom Post Types Block
+Plugin Name: Industrial Post Factory
 Plugin URI: https://industrialagency.ca
-Description: Map your post type archives to a page and use our Gutenberg block to show posts
+Description: Map your post type archives to a page and use the Gutenberg block to show posts!
 Author: Adam Bielinski
-Version: 2.1.2
+Version: 12.1.2
 Requires at least: 5.0
 Author URI: https://industrialagency.ca
 Contributors: ronalfy

@@ -733,6 +733,10 @@ function ptam_register_custom_posts_block()
                 'type' => 'string',
                 'default' => ''
             ),
+            'readMoreMetaType' => array(
+                'type' => 'string',
+                'default' => 'download'
+            ),
             'trimWords' => array(
                 'type' => 'int',
                 'default' => 55,
