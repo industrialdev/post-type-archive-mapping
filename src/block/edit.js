@@ -66,7 +66,7 @@ class PTAM_Custom_Posts extends Component {
 			imageSizes: [],
 			userTaxonomies: [],
 			userTerms: [],
-			filterableTaxonomies: [],
+			filterableTaxonomies: "[]",
 			imageLocation: this.props.attributes.imageLocation,
 			taxonomyLocation: this.props.attributes.taxonomyLocation,
 			avatarSize: this.props.attributes.avatarSize,
@@ -234,6 +234,7 @@ class PTAM_Custom_Posts extends Component {
 
 	toggleDisplayFilteringFor = (tax, checked) => {
 		let { filterableTaxonomies } = this.props.attributes;
+		filterableTaxonomies = JSON.parse(filterableTaxonomies);
 		const index = filterableTaxonomies.indexOf(tax);
 
 		if (index !== -1) {
@@ -246,6 +247,7 @@ class PTAM_Custom_Posts extends Component {
 			}
 		}
 
+		filterableTaxonomies = JSON.stringify(filterableTaxonomies);
 		this.props.setAttributes( {
 			filterableTaxonomies: filterableTaxonomies
 		});
@@ -815,9 +817,10 @@ class PTAM_Custom_Posts extends Component {
 				{displayFiltering &&
 				this.state.taxonomyList.map((tax, i) => {
 					if (tax.value !== "none") {
+						const checked = JSON.parse(filterableTaxonomies).indexOf(tax.value) !== -1;
 						return <CheckboxControl
 							label={tax.label}
-							checked={(filterableTaxonomies.indexOf(tax.value) !== -1)}
+							checked={checked}
 							onChange={(state) => {
 								this.toggleDisplayFilteringFor(tax.value, state);
 							}}
@@ -923,7 +926,7 @@ class PTAM_Custom_Posts extends Component {
 
 					{displayFiltering &&
 						<form class="grid grid--flex-md">
-							{filterableTaxonomies.map((tax) => {
+							{JSON.parse(filterableTaxonomies).map((tax) => {
 								if( tax.value !== false ) {
 									return (<div className="grid__col">
 										<label className="ptam-term-label">Filter by {tax}

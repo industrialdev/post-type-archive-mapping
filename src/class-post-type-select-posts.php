@@ -175,7 +175,8 @@ function ptam_filtering ( $attributes, &$post_args, $post_type) {
     $filter_block = "";
     $filter_block .= '<form method="get" class="grid grid--flex-md ptam-filter-form">';
 
-    foreach( $attributes['filterableTaxonomies'] as $tax_name ) {
+    $taxonomies = json_decode($attributes['filterableTaxonomies']);
+    foreach( $taxonomies as $tax_name ) {
         $tax_formname = "ptam_" . $tax_name;
         $taxonomy = $taxonomies[$tax_name];
         $terms = get_terms(array(
@@ -807,11 +808,8 @@ function ptam_register_custom_posts_block()
                 'default' => false,
             ),
             'filterableTaxonomies' => array(
-                'type' => 'array',
-                'items' => [
-                    'type' => 'string',
-                ],
-                'default' => []
+                'type' => 'string',
+                'default' => "[]"
             )
         ),
         'render_callback' => 'ptam_custom_posts',
