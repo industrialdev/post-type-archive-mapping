@@ -229,6 +229,7 @@ function ptam_custom_posts( $attributes ) {
 
     global $post;
 	$paged = 1;
+    $filtering = "";
 
 	// only paginate block if we have pagination enabled
 	if( !empty( $attributes['pagination'] ) && $attributes['pagination'] ) {
@@ -266,7 +267,7 @@ function ptam_custom_posts( $attributes ) {
 
     $list_items_markup = '';
 
-    $list_items_markup .= ptam_filtering($attributes, $post_args, $attributes['postType']);
+    $filtering .= ptam_filtering($attributes, $post_args, $attributes['postType']);
 
 	$image_placememt_options = $attributes['imageLocation'];
 	$taxonomy_placement_options = $attributes['taxonomyLocation'];
@@ -348,20 +349,22 @@ function ptam_custom_posts( $attributes ) {
 
 					// Get the featured image
 					if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage']  && 'below_title' === $image_placememt_options) {
-						if ($post_thumb_id){
+
+                        $post_thumb_size = $attributes['imageTypeSize'];
+                        $styleString = sprintf('width: %1$spx; height: %2$spx; %3$s',
+                            ptam_get_image_width($post_thumb_size),
+                            ptam_get_image_height($post_thumb_size),
+                            'grid' === $attributes['postLayout'] ? "text-align: {$attributes['imageAlignment']};" : ''
+                        );
+
+                        if ($post_thumb_id){
 							$list_items_markup .= sprintf(
-								'<div class="ptam-block-post-grid-image" %3$s><a href="%1$s" rel="bookmark">%2$s</a></div>',
+								'<div class="ptam-block-post-grid-image" style="%3$s"><a href="%1$s" rel="bookmark">%2$s</a></div>',
 								esc_url( get_permalink( $post_id ) ),
 								ptam_get_profile_image( $attributes, $post_thumb_id, $post->post_author, $post->ID ),
-								'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['imageAlignment']}" : ''
+                                $styleString
 							);
 						}else {
-                            $post_thumb_size = $attributes['imageTypeSize'];
-                            $styleString = sprintf('width: %1$spx; height: %2$spx; ',
-                                ptam_get_image_width($post_thumb_size),
-                                ptam_get_image_height($post_thumb_size)
-                            );
-
                             if ('grid' === $attributes['postLayout']){
                                 $styleString .= "text-align: {$attributes['imageAlignment']}; ";
                             }
@@ -575,11 +578,12 @@ function ptam_custom_posts( $attributes ) {
 
 	// Output the post markup
 	$block_content = sprintf(
-		'<div class="%1$s"><div class="%2$s">%3$s</div><div class="ptam-pagination">%4$s</div></div>',
+		'<div class="%1$s">%5$s<div class="%2$s">%3$s</div><div class="ptam-pagination">%4$s</div></div>',
 		esc_attr( $class ),
 		esc_attr( $grid_class ),
 		$list_items_markup,
-		$pagination
+		$pagination,
+        $filtering
 	);
 
 	return $block_content;
