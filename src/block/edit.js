@@ -268,6 +268,12 @@ class PTAM_Custom_Posts extends Component {
 		setAttributes( { displayTaxonomies: ! displayTaxonomies } );
 	};
 
+	toggleDisplayTaxonomyLabels = () => {
+		const { displayTaxonomyLabels } = this.props.attributes;
+		const { setAttributes } = this.props;
+		setAttributes( { displayTaxonomyLabels: ! displayTaxonomyLabels } );
+	};
+
 	trimWords = ( value ) => {
 		const { setAttributes } = this.props;
 		setAttributes( { trimWords: value } );
@@ -403,7 +409,7 @@ class PTAM_Custom_Posts extends Component {
 	render() {
 		let htmlToReactParser = new HtmlToReactParser();
 		const { attributes, setAttributes } = this.props;
-		const { postType, term, taxonomy, displayPostDate,displayPostDateBefore, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, displayFiltering,filterableTaxonomies, orderBy, postsToShow, readMoreText,readMoreClassName, readMoreMetaField, readMoreMetaLabel, readMoreMetaClassName, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, trimWords, titleAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, linkColor, contentColor, dateColor, continueReadingColor } = attributes;
+		const { postType, term, taxonomy, displayPostDate,displayPostDateBefore, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, displayFiltering,filterableTaxonomies, orderBy, postsToShow, readMoreText,readMoreClassName, readMoreMetaField, readMoreMetaLabel, readMoreMetaClassName, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, displayTaxonomyLabels, trimWords, titleAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, linkColor, contentColor, dateColor, continueReadingColor } = attributes;
 
 		let userTaxonomies = this.state.userTaxonomies;
 		let userTaxonomiesArray = [];
@@ -572,6 +578,14 @@ class PTAM_Custom_Posts extends Component {
 					checked={displayTaxonomies}
 					onChange={this.toggleTaxonomyDisplay}
 				/>
+
+				{displayTaxonomies &&
+				<ToggleControl
+					label={__('Display Taxonomy Labels', 'post-type-archive-mapping')}
+					checked={displayTaxonomyLabels}
+					onChange={this.toggleDisplayTaxonomyLabels}
+				/>
+				}
 				{displayTaxonomies &&
 				<SelectControl
 					label={__('Taxonomy Location', 'post-type-archive-mapping')}
@@ -1008,7 +1022,11 @@ class PTAM_Custom_Posts extends Component {
 											<div>
 												{userTaxonomiesArray.map((key) => {
 													if( post.terms[key.value] !== false ) {
-														return (<div className="ptam-terms"><span className="ptam-term-label">{key.label}: </span><span className="ptam-term-values" style={linkColorStyles}>{htmlToReactParser.parse(post.terms[key.value])}</span></div>);
+														let label = "";
+														if (displayTaxonomyLabels){
+															label = key.label + ": ";
+														}
+														return (<div className="ptam-terms"><span className="ptam-term-label">{label}</span><span className="ptam-term-values" style={linkColorStyles}>{htmlToReactParser.parse(post.terms[key.value])}</span></div>);
 													}
 												})}
 											</div>
@@ -1052,7 +1070,11 @@ class PTAM_Custom_Posts extends Component {
 											<div style={metaAlignmentStyles}>
 												{userTaxonomiesArray.map((key) => {
 													if( post.terms[key.value] !== false ) {
-														return (<div className="ptam-terms"><span className="ptam-term-label">{key.label}: </span><span className="ptam-term-values" style={linkColorStyles}>{htmlToReactParser.parse(post.terms[key.value])}</span></div>);
+														let label = "";
+														if (displayTaxonomyLabels){
+															label = key.label + ": ";
+														}
+														return (<div className="ptam-terms"><span className="ptam-term-label">{label}</span><span className="ptam-term-values" style={linkColorStyles}>{htmlToReactParser.parse(post.terms[key.value])}</span></div>);
 													}
 												})}
 											</div>

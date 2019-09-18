@@ -156,7 +156,11 @@ function ptam_get_taxonomy_terms( $post, $attributes = array() ) {
 	}
 	foreach( $taxonomies as $key => $taxonomy ) {
 		if ( false === $terms[$key] ) continue;
-		$markup .= sprintf( '<div class="ptam-terms"><span class="ptam-term-label">%s: </span><span class="ptam-term-values">%s</span></div>', esc_html( $taxonomy->label ), $terms[$key] );
+		if ($attributes['displayTaxonomyLabels']) {
+            $markup .= sprintf('<div class="ptam-terms"><span class="ptam-term-label">%s: </span><span class="ptam-term-values">%s</span></div>', esc_html($taxonomy->label), $terms[$key]);
+        }else{
+            $markup .= sprintf('<div class="ptam-terms"><span class="ptam-term-values">%s</span></div>', $terms[$key]);
+        }
 	}
 	return $markup;
 }
@@ -636,6 +640,10 @@ function ptam_register_custom_posts_block()
                 'default' => 'category',
             ),
             'displayTaxonomies' => array(
+                'type' => 'bool',
+                'default' => true,
+            ),
+            'displayTaxonomyLabels' => array(
                 'type' => 'bool',
                 'default' => true,
             ),
