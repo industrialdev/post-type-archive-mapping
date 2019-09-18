@@ -50,6 +50,7 @@ class PTAM_Custom_Posts extends Component {
 		this.toggleDisplayPagination = this.toggleDisplayPagination.bind(this);
 		this.toggleDisplayFiltering = this.toggleDisplayFiltering.bind(this);
 		this.toggleDisplayFilteringFor = this.toggleDisplayFilteringFor.bind(this);
+		this.toggleMetaIsDownload = this.toggleMetaIsDownload.bind(this);
 		this.get_latest_data = this.get_latest_data.bind(this);
 		this.get_latest_posts = this.get_latest_posts.bind(this);
 		this.get_term_list = this.get_term_list.bind(this);
@@ -216,6 +217,13 @@ class PTAM_Custom_Posts extends Component {
 		const { setAttributes } = this.props;
 
 		setAttributes( { displayPostLink: ! displayPostLink } );
+	}
+
+	toggleMetaIsDownload() {
+		const { metaIsDownload } = this.props.attributes;
+		const { setAttributes } = this.props;
+
+		setAttributes( { metaIsDownload: ! metaIsDownload } );
 	}
 
 	toggleDisplayPagination() {
@@ -409,7 +417,7 @@ class PTAM_Custom_Posts extends Component {
 	render() {
 		let htmlToReactParser = new HtmlToReactParser();
 		const { attributes, setAttributes } = this.props;
-		const { postType, term, taxonomy, displayPostDate,displayPostDateBefore, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, displayFiltering,filterableTaxonomies, orderBy, postsToShow, readMoreText,readMoreClassName, readMoreMetaField, readMoreMetaLabel, readMoreMetaClassName, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, displayTaxonomyLabels, trimWords, titleAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, linkColor, contentColor, dateColor, continueReadingColor } = attributes;
+		const { postType, term, taxonomy, displayPostDate,displayPostDateBefore, displayPostExcerpt, displayPostAuthor, displayPostImage,displayPostLink, align, postLayout, columns, order, pagination, displayFiltering,filterableTaxonomies, orderBy, postsToShow, readMoreText,readMoreClassName, readMoreMetaField, readMoreMetaLabel, readMoreMetaClassName,metaIsDownload, imageLocation, taxonomyLocation, imageType, imageTypeSize, avatarSize, changeCapitilization, displayTaxonomies, displayTaxonomyLabels, trimWords, titleAlignment, imageAlignment, metaAlignment, contentAlignment, padding, border, borderRounded, borderColor, backgroundColor, titleColor, linkColor, contentColor, dateColor, continueReadingColor } = attributes;
 
 		let userTaxonomies = this.state.userTaxonomies;
 		let userTaxonomiesArray = [];
@@ -657,8 +665,16 @@ class PTAM_Custom_Posts extends Component {
 				/>
 				}
 				{displayPostLink &&
+
+				<ToggleControl
+					label={__('Meta link is download', 'post-type-archive-mapping')}
+					checked={metaIsDownload}
+					onChange={this.toggleMetaIsDownload}
+				/>
+				}
+				{displayPostLink &&
 				<TextControl
-					label={__('Meta download link Key', 'post-type-archive-mapping')}
+					label={__('Meta link Key', 'post-type-archive-mapping')}
 					type="text"
 					value={readMoreMetaField}
 					onChange={(value) => this.props.setAttributes({readMoreMetaField: value})}
@@ -666,7 +682,7 @@ class PTAM_Custom_Posts extends Component {
 				}
 				{displayPostLink &&
 				<TextControl
-					label={__('Meta link download Label', 'post-type-archive-mapping')}
+					label={__('Meta link Label', 'post-type-archive-mapping')}
 					type="text"
 					value={readMoreMetaLabel}
 					onChange={(value) => this.props.setAttributes({readMoreMetaLabel: value})}
@@ -674,7 +690,7 @@ class PTAM_Custom_Posts extends Component {
 				}
 				{displayPostLink &&
 				<TextControl
-					label={__('Meta link download class names', 'post-type-archive-mapping')}
+					label={__('Meta link class names', 'post-type-archive-mapping')}
 					type="text"
 					value={readMoreMetaClassName}
 					onChange={(value) => this.props.setAttributes({readMoreMetaClassName: value})}

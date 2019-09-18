@@ -173,7 +173,7 @@ function ptam_filtering ( $attributes, &$post_args, $post_type) {
 
     global $id_counter;
 
-    $taxonomies = get_object_taxonomies( $post_type, 'objects' );
+    $objTaxonomies = get_object_taxonomies( $post_type, 'objects' );
     $showReset = false;
 
     $filter_block = "";
@@ -181,8 +181,9 @@ function ptam_filtering ( $attributes, &$post_args, $post_type) {
 
     $taxonomies = json_decode($attributes['filterableTaxonomies']);
     foreach( $taxonomies as $tax_name ) {
+        $taxonomy = $objTaxonomies[$tax_name];
+        
         $tax_formname = "ptam_" . $tax_name;
-        $taxonomy = $taxonomies[$tax_name];
         $terms = get_terms(array(
             'taxonomy'=>$tax_name
         ));
@@ -476,12 +477,18 @@ function ptam_custom_posts( $attributes ) {
                     $extraContent = "";
                     if ( !empty($attributes['readMoreMetaField'])){
                         $fieldName = $attributes['readMoreMetaField'];
-                        $metaContent = wp_get_attachment_url(get_post_meta( $post_id, $fieldName, true));
+                        $metaContent = get_post_meta( $post_id, $fieldName, true);
                         $text = $attributes['readMoreMetaLabel'];
-                        $extraContent = sprintf('<a class="meta-link %3$s" href="%1$s" rel="bookmark" download>%2$s</a>',
+                        $extraAttr = "";
+                        if ($attributes['metaIsDownload']){
+                            $extraAttr = " download ";
+                            $metaContent = wp_get_attachment_url($metaContent);
+                        }
+                        $extraContent = sprintf('<a class="meta-link %3$s" href="%1$s" rel="bookmark" %4$s>%2$s</a>',
                             $metaContent,
                             $text,
-                            $attributes['readMoreMetaClassName']
+                            $attributes['readMoreMetaClassName'],
+                            $extraAttr
                         );
                     }
 
@@ -745,6 +752,10 @@ function ptam_register_custom_posts_block()
             'readMoreMetaClassName' => array(
                 'type' => 'string',
                 'default' => ''
+            ),
+            'metaIsDownload' => array(
+                'type' => 'boolean',
+                'default' => false
             ),
             'readMoreMetaType' => array(
                 'type' => 'string',
