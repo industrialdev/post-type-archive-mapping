@@ -182,7 +182,7 @@ function ptam_filtering ( $attributes, &$post_args, $post_type) {
     $taxonomies = json_decode($attributes['filterableTaxonomies']);
     foreach( $taxonomies as $tax_name ) {
         $taxonomy = $objTaxonomies[$tax_name];
-        
+
         $tax_formname = "ptam_" . $tax_name;
         $terms = get_terms(array(
             'taxonomy'=>$tax_name
@@ -478,18 +478,21 @@ function ptam_custom_posts( $attributes ) {
                     if ( !empty($attributes['readMoreMetaField'])){
                         $fieldName = $attributes['readMoreMetaField'];
                         $metaContent = get_post_meta( $post_id, $fieldName, true);
-                        $text = $attributes['readMoreMetaLabel'];
-                        $extraAttr = "";
-                        if ($attributes['metaIsDownload']){
-                            $extraAttr = " download ";
-                            $metaContent = wp_get_attachment_url($metaContent);
+
+                        if (!empty($metaContent)) {
+                            $text = $attributes['readMoreMetaLabel'];
+                            $extraAttr = "";
+                            if ($attributes['metaIsDownload']) {
+                                $extraAttr = " download ";
+                                $metaContent = wp_get_attachment_url($metaContent);
+                            }
+                            $extraContent = sprintf('<a class="meta-link %3$s" href="%1$s" %4$s>%2$s</a>',
+                                $metaContent,
+                                $text,
+                                $attributes['readMoreMetaClassName'],
+                                $extraAttr
+                            );
                         }
-                        $extraContent = sprintf('<a class="meta-link %3$s" href="%1$s" rel="bookmark" %4$s>%2$s</a>',
-                            $metaContent,
-                            $text,
-                            $attributes['readMoreMetaClassName'],
-                            $extraAttr
-                        );
                     }
 
                     $list_items_markup .= sprintf(
