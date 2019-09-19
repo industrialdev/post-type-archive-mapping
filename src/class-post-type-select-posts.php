@@ -19,7 +19,7 @@ function ptam_get_profile_image( $attributes, $post_thumb_id = 0, $post_author =
 		}
 		if ($image != ""){
             $list_item_markup .= sprintf(
-                '<div class="ptam-block-post-grid-image" %3$s><a href="%1$s" rel="bookmark">%2$s</a></div>',
+                '<div class="ptam-block-post-grid-image" %3$s><a aria-hidden="true" href="%1$s">%2$s</a></div>',
                 esc_url( get_permalink( $post_id ) ),
                 $image,
                 'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['imageAlignment']}'" : ''
@@ -36,7 +36,7 @@ function ptam_get_profile_image( $attributes, $post_thumb_id = 0, $post_author =
             }
 
             $list_item_markup .= sprintf(
-                '<div class="ptam-block-post-grid-image missing" style="%1$s"></div>',
+                '<div class="ptam-block-post-grid-image missing" aria-hidden="true" style="%1$s"></div>',
                 $styleString
             );
         }
@@ -339,7 +339,7 @@ function ptam_custom_posts( $attributes ) {
 
 
 				$list_items_markup .= sprintf(
-					'<h2 class="ptam-block-post-grid-title" %3$s><a href="%1$s" rel="bookmark" style="color: %4$s; box-shadow: unset;">%2$s</a></h2>',
+					'<h2 class="ptam-block-post-grid-title" %3$s><a href="%1$s" style="color: %4$s; box-shadow: unset;">%2$s</a></h2>',
 					esc_url( get_permalink( $post_id ) ),
 					esc_html( $title ),
 					'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['titleAlignment']}'" : '',
@@ -365,7 +365,7 @@ function ptam_custom_posts( $attributes ) {
 
                         if ($post_thumb_id){
 							$list_items_markup .= sprintf(
-								'<div class="ptam-block-post-grid-image" style="%3$s"><a href="%1$s" rel="bookmark">%2$s</a></div>',
+								'<div class="ptam-block-post-grid-image" style="%3$s"><a href="%1$s" aria-hidden="true">%2$s</a></div>',
 								esc_url( get_permalink( $post_id ) ),
 								ptam_get_profile_image( $attributes, $post_thumb_id, $post->post_author, $post->ID ),
                                 $styleString
@@ -375,7 +375,7 @@ function ptam_custom_posts( $attributes ) {
                                 $styleString .= "text-align: {$attributes['imageAlignment']}; ";
                             }
 							$list_items_markup .= sprintf(
-								'<div class="ptam-block-post-grid-image missing" style="%1$s"></div>',
+								'<div class="ptam-block-post-grid-image missing" aria-hidden="true" style="%1$s"></div>',
                                 $styleString
                             );
 
@@ -411,14 +411,14 @@ function ptam_custom_posts( $attributes ) {
 					if ( isset( $attributes['displayPostImage'] ) && $attributes['displayPostImage'] && 'below_title_and_meta' === $image_placememt_options) {
 						if ($post_thumb_id){
 							$list_items_markup .= sprintf(
-								'<div class="ptam-block-post-grid-image" %3$s><a href="%1$s" rel="bookmark">%2$s</a></div>',
+								'<div class="ptam-block-post-grid-image" %3$s><a href="%1$s" aria-hidden="true">%2$s</a></div>',
 								esc_url( get_permalink( $post_id ) ),
 								ptam_get_profile_image( $attributes, $post_thumb_id, $post->post_author, $post->ID ),
 								'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['imageAlignment']}" : ''
 							);
 						}else{
 							$list_items_markup .= sprintf(
-								'<div class="ptam-block-post-grid-image missing" %1$s></div>',
+								'<div class="ptam-block-post-grid-image missing" aria-hidden="true" %1$s></div>',
 								'grid' === $attributes['postLayout'] ? "style='text-align: {$attributes['imageAlignment']}" : '');
 
 						}
@@ -461,7 +461,7 @@ function ptam_custom_posts( $attributes ) {
 						}
 
 						$list_items_markup .= sprintf(
-							'<div class="ptam-block-post-grid-image"><a href="%1$s" rel="bookmark">%2$s</a></div>',
+							'<div class="ptam-block-post-grid-image"><a href="%1$s"  aria-hidden="true">%2$s</a></div>',
 							esc_url( get_permalink( $post_id ) ),
 							ptam_get_profile_image( $attributes, $post_thumb_id, $post->post_author, $post->ID )
 						);
@@ -496,7 +496,7 @@ function ptam_custom_posts( $attributes ) {
                     }
 
                     $list_items_markup .= sprintf(
-                        '<p class="ptam-read-more-buttons"><a class="ptam-block-post-grid-link ptam-text-link %4$s" href="%1$s" rel="bookmark" style="color: %3$s">%2$s</a>%5$s</p>',
+                        '<p class="ptam-read-more-buttons"><a class="ptam-block-post-grid-link ptam-text-link %4$s" href="%1$s" style="color: %3$s">%2$s</a>%5$s</p>',
                         esc_url( get_permalink( $post_id ) ),
                         esc_html( $attributes['readMoreText'] ),
                         esc_attr( $attributes['continueReadingColor'] ),
