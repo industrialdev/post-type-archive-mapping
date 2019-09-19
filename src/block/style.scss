@@ -16,6 +16,8 @@
 
 		article {
 			margin-bottom: 2.5em;
+			display: grid;
+			grid-template-rows: 1fr min-content;
 		}
 	}
 
