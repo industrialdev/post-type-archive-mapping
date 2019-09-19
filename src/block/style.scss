@@ -23,41 +23,44 @@
 
 	.is-grid.columns-2 {
 		grid-template-columns: 1fr 1fr;
-		@media only screen and (max-width: 600px) {
+		@media only screen and (max-width: 480px) {
 			grid-template-columns: 1fr;
 		}
 	}
 
 	.is-grid.columns-3 {
 		grid-template-columns: 1fr 1fr 1fr;
-		@media only screen and (max-width: 600px) {
+		@media only screen and (max-width: 767px) {
 			grid-template-columns: 1fr 1fr;
 		}
 	}
 
 	.is-grid.columns-4 {
 		grid-template-columns: 1fr 1fr 1fr 1fr;
-		@media only screen and (max-width: 800px) {
+		@media only screen and (max-width: 992px) {
 			grid-template-columns: 1fr 1fr 1fr;
 		}
+        @media only screen and (max-width: 767px) {
+          grid-template-columns: 1fr 1fr;
+        }
 	}
 
 	.is-grid.columns-5 {
 		grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-		@media only screen and (max-width: 1000px) {
+		@media only screen and (max-width: 1200px) {
 			grid-template-columns: 1fr 1fr 1fr 1fr;
 		}
-		@media only screen and (max-width: 800px) {
+		@media only screen and (max-width: 992px) {
 			grid-template-columns: 1fr 1fr 1fr;
 		}
 	}
 
 	.is-grid.columns-6 {
 		grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-		@media only screen and (max-width: 1000px) {
+		@media only screen and (max-width: 1200px) {
 			grid-template-columns: 1fr 1fr 1fr 1fr;
 		}
-		@media only screen and (max-width: 800px) {
+		@media only screen and (max-width: 992px) {
 			grid-template-columns: 1fr 1fr 1fr;
 		}
 	}
@@ -93,7 +96,7 @@
 	}
 
 	div[class*="columns"].is-grid {
-		@media only screen and (max-width: 600px) {
+		@media only screen and (max-width: 480px) {
 			grid-template-columns: 1fr;
 		}
 	}
@@ -182,7 +185,7 @@
 		line-height: 1.5;
 		font-size: 18px;
 
-		@media only screen and (max-width: 600px) {
+		@media only screen and (max-width: 767px) {
 			font-size: 16px;
 		}
 
@@ -232,13 +235,13 @@
 				padding-bottom: 5%;
 			}
 
-			@media only screen and (min-width: 600px) {
+			@media only screen and (min-width: 767px) {
 				&:not(:last-child) {
 					border-bottom: solid 1px #eee;
 				}
 			}
 
-			@media only screen and (max-width: 600px) {
+			@media only screen and (max-width: 767px) {
 				grid-template-columns: 1fr;
 			}
 		}
@@ -252,13 +255,13 @@
 		.ptam-block-post-grid-image {
 			margin-bottom: 0;
 
-			@media only screen and (max-width: 600px) {
+			@media only screen and (max-width: 767px) {
 				margin-bottom: 5%;
 			}
 		}
 
 		.ptam-block-post-grid-title {
-			@media only screen and (min-width: 600px) {
+			@media only screen and (min-width: 767px) {
 				font-size: 34px;
 			}
 		}

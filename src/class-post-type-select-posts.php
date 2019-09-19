@@ -738,7 +738,7 @@ function ptam_register_custom_posts_block()
             ),
             'readMoreText' => array(
                 'type' => 'string',
-                'default' => 'Continue Reading',
+                'default' => 'Read More',
             ),
             'readMoreClassName' => array(
                 'type' => 'string',
