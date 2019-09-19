@@ -486,11 +486,12 @@ function ptam_custom_posts( $attributes ) {
                                 $extraAttr = " download ";
                                 $metaContent = wp_get_attachment_url($metaContent);
                             }
-                            $extraContent = sprintf('<a class="meta-link %3$s" href="%1$s" %4$s>%2$s</a>',
+                            $extraContent = sprintf('<a class="meta-link %3$s" href="%1$s" %4$s>%2$s<span class="webaim-hidden">for %5$s<span></a>',
                                 $metaContent,
                                 $text,
                                 $attributes['readMoreMetaClassName'],
-                                $extraAttr
+                                $extraAttr,
+                                $title
                             );
                         }
                     }
