@@ -496,12 +496,13 @@ function ptam_custom_posts( $attributes ) {
                     }
 
                     $list_items_markup .= sprintf(
-                        '<p class="ptam-read-more-buttons"><a class="ptam-block-post-grid-link ptam-text-link %4$s" href="%1$s" style="color: %3$s">%2$s</a>%5$s</p>',
+                        '<p class="ptam-read-more-buttons"><a class="ptam-block-post-grid-link ptam-text-link %4$s" href="%1$s" style="color: %3$s">%2$s<span class="webaim-hidden"> about %6$s<span></a>%5$s</p>',
                         esc_url( get_permalink( $post_id ) ),
                         esc_html( $attributes['readMoreText'] ),
                         esc_attr( $attributes['continueReadingColor'] ),
                         esc_attr( $attributes['readMoreClassName']),
-                        $extraContent
+                        $extraContent,
+                        $title
                     );
                 }
 
