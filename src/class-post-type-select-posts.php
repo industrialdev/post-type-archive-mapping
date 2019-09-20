@@ -215,8 +215,8 @@ function ptam_filtering ( $attributes, &$post_args, $post_type) {
 
     $filter_block .= '<div class="form__group grid__col">';
 
-        $filter_block .= '<label>&nbsp;';
-        $filter_block .= '<input type="submit" value="Filter" class="button button--primary button--full-width"></label>';
+        $filter_block .= '&nbsp;';
+        $filter_block .= '<input type="submit" value="Filter" class="button button--primary button--full-width">';
 
         if ($showReset){
 
