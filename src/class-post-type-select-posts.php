@@ -486,7 +486,7 @@ function ptam_custom_posts( $attributes ) {
                                 $extraAttr = " download ";
                                 $metaContent = wp_get_attachment_url($metaContent);
                             }
-                            $extraContent = sprintf('<a class="meta-link %3$s" href="%1$s" %4$s>%2$s<span class="webaim-hidden">for %5$s<span></a>',
+                            $extraContent = sprintf('<a class="meta-link %3$s" href="%1$s" %4$s>%2$s<span class="webaim-hidden">for %5$s</span></a>',
                                 $metaContent,
                                 $text,
                                 $attributes['readMoreMetaClassName'],
@@ -497,7 +497,7 @@ function ptam_custom_posts( $attributes ) {
                     }
 
                     $list_items_markup .= sprintf(
-                        '<p class="ptam-read-more-buttons"><a class="ptam-block-post-grid-link ptam-text-link %4$s" href="%1$s" style="color: %3$s">%2$s<span class="webaim-hidden"> about %6$s<span></a>%5$s</p>',
+                        '<p class="ptam-read-more-buttons"><a class="ptam-block-post-grid-link ptam-text-link %4$s" href="%1$s" style="color: %3$s">%2$s<span class="webaim-hidden"> about %6$s</span></a>%5$s</p>',
                         esc_url( get_permalink( $post_id ) ),
                         esc_html( $attributes['readMoreText'] ),
                         esc_attr( $attributes['continueReadingColor'] ),
