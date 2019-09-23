@@ -17,7 +17,11 @@
 		article {
 			margin-bottom: 2.5em;
 			display: grid;
-			grid-template-rows: 1fr min-content;
+			grid-template-rows: min-content 1fr;
+            .ptam-block-post-grid-text{
+                display: grid;
+                grid-template-rows: auto minmax(0,1fr);
+            }
 		}
 	}
 
