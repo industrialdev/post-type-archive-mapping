@@ -195,7 +195,7 @@ function ptam_filtering ( $attributes, &$post_args, $post_type) {
         }
 
         $filter_block .= '<div class="form__group grid__col">';
-            $filter_block .= '<label for="select-3" class="form__label">';
+            $filter_block .= '<label class="form__label">';
 
             $filter_block .= __('Filter by') . " " . $taxonomy->labels->singular_name;
             $args = array(
