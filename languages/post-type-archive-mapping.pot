@@ -1,4 +1,4 @@
-# Copyright (C) 2019 Adam Bielinski
+# Copyright (C) 2020 Adam Bielinski
 # This file is distributed under the same license as the Industrial Post Factory plugin.
 msgid ""
 msgstr ""
@@ -9,9 +9,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2019-09-25T16:54:20+00:00\n"
+"POT-Creation-Date: 2020-01-03T15:56:09+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.1.0\n"
+"X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: custom-post-type-filter-block\n"
 
 #. Plugin Name of the plugin
